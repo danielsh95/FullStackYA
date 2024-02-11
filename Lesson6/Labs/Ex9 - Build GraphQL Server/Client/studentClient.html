@@ -1,0 +1,214 @@
+<html>
+
+<body>
+    <table border="5">
+        <tr><!--GetAllStudents-->
+            <td><label>get all students:</label></td>
+            <td><button onclick="getAllStudents()">find</button></td>
+        </tr>
+        <tr><!--GetStudentById-->
+            <td> <label>Enter ID to find student:</label></td>
+            <td> <input type="text" id="txtFindStudentById" placeholder="Enter ID"> </td>
+            <td> <button onclick="getStudentById()">find</button></td>
+        </tr>
+        <tr><!--GetStudentsByFaculty-->
+            <td> <label>Enter faculty to filter:</label></td>
+            <td> <input type="text" id="txtFindStudentsByIdFaculty" placeholder="Enter Faculty"> </td>
+            <td> <button onclick="getStudentsByFaculty()">find</button></td>
+        </tr>
+        <tr><!--GetAvarageGrades-->
+            <td> <label>Get avarage grades:</label></td>
+            <td> <input type="text" id="txtGetAvarageGrades" placeholder="Enter ID" value="2"> </td>
+            <td> <button onclick="getAvarageGrades()">find</button></td>
+        </tr>
+        <tr><!--AddStudent-->
+            <td> <label>Add a new student:</label></td>
+            <td> <input type="text" id="txtId_newStudent" placeholder="Enter ID" value="3"> </td>
+            <td> <input type="text" id="txtName_newStudent" placeholder="Enter name" value="levi"> </td>
+            <td> <input type="text" id="txtfaculty_newStudent" placeholder="Enter faculty" value="AI"> </td>
+            <td> <button onclick="addStudent()">Add</button></td>
+        </tr>
+        <tr><!--AddGradeToStudent-->
+            <td> <label>Add grade to student:</label></td>
+            <td> <input type="text" id="txtId_updateGradeStudent" placeholder="Enter ID" value="3"> </td>
+            <td> <input type="text" id="txtProfession_updateGradeStudent" placeholder="Enter profession"
+                    value="Algebra">
+            <td> <input type="text" id="txtScore_updateGradeStudent" placeholder="Enter score" value="88"> </td>
+            <td> <button onclick="addGradeToStudent()">Add grade</button></td>
+        </tr>
+        <tr><!--UpdateStudentById-->
+            <td> <label>Update student by id:</label></td>
+            <td> <input type="text" id="txtId_updateStudent" placeholder="Enter ID" value="3"> </td>
+            <td> <input type="text" id="txtName_updateStudent" placeholder="Enter a new name" value="gad"> </td>
+            <td> <input type="text" id="txtFacuty_updateStudent" placeholder="Enter a new faculty" value="LAW"> </td>
+            <td> <button onclick="updateStudentById()">Update</button></td>
+        </tr>
+        <tr><!--DeleteStudentById-->
+            <td> <label>Delete student by id:</label></td>
+            <td> <input type="text" id="txtId_DeleteStudent" placeholder="Enter ID" value="2"> </td>
+            <td> <button onclick="deleteStudent()">Delete</button></td>
+        </tr>
+
+    </table>
+    <div id="preId">
+
+    </div>
+    <!--Table-->
+
+
+
+</body>
+
+<script>
+    const query_getAllStudents = `query{getAllStudents{id,name,faculty,grades {profession,score}}}`
+
+    const query_getstudentById = `query($studentId: Int){ 
+        getStudent(id: $studentId){
+        id
+        name
+        faculty
+        grades {
+            profession
+            score
+            }
+        }
+    }`
+
+    const query_getstudentsByFaculty = `query($faculty: String){
+        getStudentsByFaculty(faculty: $faculty){id,name,faculty,grades {profession,score}}}`
+
+    const query_getAvarageGrades = `query($studentId: Int){
+        getAvarageGrades(id: $studentId){
+            avarage
+        }
+    }`
+
+    const mutation_addStudent = `mutation($student: StudentInput){
+        addNewStudent(student: $student)}`
+
+    const mutation_addGradeToStudent = `mutation($id: Int, $grade: GradeInput){
+        addGradeToStudent(id: $id, grade: $grade)}`
+
+    const mutation_updateStudent = `mutation($id: Int, $name: String, $faculty: String){
+        updateStudentById(id: $id, name: $name, faculty: $faculty)}`
+
+    const mutation_deleteStudent = `mutation($id: Int){
+        deleteStudent(id: $id)}`
+
+    const url = 'http://localhost:3000/graphql'
+
+
+    //getAllStudents
+    const getAllStudents = async () => {
+        const resp = await requestFetch(query_getAllStudents)
+        const { data } = await resp.json();
+        document.getElementById('preId').innerText = JSON.stringify(data.getAllStudents, undefined, 1);
+    }
+
+    //getStudentById
+    const getStudentById = async () => {
+        const id = document.getElementById('txtFindStudentById').value;
+        var v = {
+            "studentId": +id
+        }
+        const resp = await requestFetch(query_getstudentById, v)
+        const { data } = await resp.json();
+        document.getElementById('preId').innerText = JSON.stringify(data.getStudent, undefined, 1);
+    }
+
+    //getStudentsByFaculty
+    const getStudentsByFaculty = async () => {
+        const faculty = document.getElementById('txtFindStudentsByIdFaculty').value;
+        var v = {
+            "faculty": faculty
+        }
+        const resp = await requestFetch(query_getstudentsByFaculty, v)
+        const { data } = await resp.json();
+        document.getElementById('preId').innerText = JSON.stringify(data.getStudentsByFaculty, undefined, 1);
+    }
+
+    //getAvarageGrades
+    const getAvarageGrades = async () => {
+        const id = document.getElementById('txtGetAvarageGrades').value;
+        var v = {
+            "studentId": +id
+        }
+        const resp = await requestFetch(query_getAvarageGrades, v)
+        const { data } = await resp.json();
+        document.getElementById('preId').innerText = JSON.stringify(data.getAvarageGrades, undefined, 1);
+    }
+
+    //addNewStudent
+    const addStudent = async () => {
+        const id = document.getElementById('txtId_newStudent').value;
+        const name = document.getElementById('txtName_newStudent').value;
+        const faculty = document.getElementById('txtfaculty_newStudent').value;
+        var v = {
+            "student": {
+                "id": +id,
+                "name": name,
+                "faculty": faculty,
+                'grades': []
+            }
+        }
+        const resp = await requestFetch(mutation_addStudent, v)
+        const { data } = await resp.json();
+        document.getElementById('preId').innerText = JSON.stringify(data.addNewStudent, undefined, 1);
+    }
+
+    //addGradeToStudent
+    const addGradeToStudent = async () => {
+        const id = document.getElementById('txtId_updateGradeStudent').value;
+        const profession = document.getElementById('txtProfession_updateGradeStudent').value;
+        const score = document.getElementById('txtScore_updateGradeStudent').value;
+        var v = {
+            "id": +id,
+            "grade": {
+                "profession": profession,
+                "score": +score
+            }
+        }
+
+        const resp = await requestFetch(mutation_addGradeToStudent, v)
+        const { data } = await resp.json();
+        document.getElementById('preId').innerText = JSON.stringify(data.addGradeToStudent, undefined, 1);
+    }
+
+    //updateStudentById
+    const updateStudentById = async () => {
+        const id = document.getElementById('txtId_updateStudent').value;
+        const name = document.getElementById('txtName_updateStudent').value;
+        const faculty = document.getElementById('txtFacuty_updateStudent').value;
+        const v = {
+            "id": +id,
+            "name": name,
+            "faculty": faculty
+        }
+        const resp = await requestFetch(mutation_updateStudent, v);
+        const { data } = await resp.json()
+        document.getElementById('preId').innerText = JSON.stringify(data.updateStudentById, undefined, 1);
+    }
+
+    //DeleteStudent
+    const deleteStudent = async () => {
+        const id = document.getElementById('txtId_DeleteStudent').value;
+        const v = {
+            "id": +id
+        }
+        const resp = await requestFetch(mutation_deleteStudent, v);
+        const { data } = await resp.json()
+        document.getElementById('preId').innerText = JSON.stringify(data.deleteStudent, undefined, 1);
+    }
+
+    const requestFetch = async (query, v = {}) => {
+        const resp = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: query, variables: v })
+        })
+        return resp;
+    }
+
+</script>
+
+</html>

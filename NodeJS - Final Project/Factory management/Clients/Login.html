@@ -1,0 +1,46 @@
+<html>
+
+<body>
+    UserName:
+    <input type="text" value="Antonette" id="txt_userName" /> <br />
+    Email:
+    <input type="text" value="Shanna@melissa.tv" id="txt_email" /> <br />
+    <button onclick="login()">Login</button>
+    <label id="lbl_message" />
+
+    <script>
+        const url = 'http://localhost:4000/users/login';
+
+        const login = async () => {
+            const loginData = {
+                userName: document.getElementById('txt_userName').value,
+                email: document.getElementById('txt_email').value
+            }
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(loginData)
+            })
+
+            const data = await response.json();
+            //Errors:
+            if (!data.Succeeded) {
+                document.getElementById('lbl_message').innerText = data.response;
+                return
+            }
+
+            console.log(data)
+            console.log(data.response.accessToken)
+            console.log(data.response.name)
+            sessionStorage['accessToken'] = data.response.accessToken;
+            sessionStorage['name'] = data.response.name;
+            sessionStorage['userId'] = data.response.userId;
+            document.getElementById('lbl_message').innerText = "Login sucssefull!!!"
+            location.href = './Emploees.html';
+        }
+        
+    </script>
+</body>
+
+</html>

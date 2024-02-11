@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+</head>
+
+<body>
+    <button onclick="disconnect()">התנתק</button>
+    Hello, <label id="lbl_username"></label>
+    <h1>Welcome to Emploees page</h1>
+
+
+</body>
+<script>
+    const accessToken = sessionStorage['accessToken'];
+    const name = sessionStorage['name'];
+    const userId = sessionStorage['userId'];
+
+    document.getElementById('lbl_username').innerText = name
+
+    const disconnect = () => {
+        sessionStorage.clear()
+        location.href = './Login.html';
+    }
+
+</script>
+
+</html>

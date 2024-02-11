@@ -1,0 +1,36 @@
+<html>
+
+<body>
+    UserName:
+    <input type="text" value="Daniel" id="userName" /> <br />
+    Password:
+    <input type="password" value="1234" id="password" /> <br />
+    <button onclick="login()">Login</button>
+
+    <script>
+        const url = 'http://localhost:3000/users/login';
+
+        const login = async () => {
+            const loginData = {
+                userName: document.getElementById('userName').value,
+                password: document.getElementById('password').value
+            }
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(loginData)
+            })
+
+            const data = await response.json();
+            //console.log(data.accessToken)
+            //console.log(data.x_id)
+            sessionStorage['accessToken'] = data.accessToken;
+            sessionStorage['x_id'] = data.x_id;
+            location.href = './products.html';
+        }
+
+    </script>
+</body>
+
+</html>
