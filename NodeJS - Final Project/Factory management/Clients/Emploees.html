@@ -2,22 +2,162 @@
 <html lang="en">
 
 <head>
-    
+
 </head>
 
-<body>
+<body onload="getEmploees()">
     <button onclick="disconnect()">התנתק</button>
     Hello, <label id="lbl_username"></label>
     <h1>Welcome to Emploees page</h1>
+
+    <table id="emploeesTable" border="5" /> 
+    <br/> 
+    <br/>
+
 
 
 </body>
 <script>
     const accessToken = sessionStorage['accessToken'];
     const name = sessionStorage['name'];
-    const userId = sessionStorage['userId'];
-
+    //const userId = sessionStorage['userId'];
     document.getElementById('lbl_username').innerText = name
+
+    const url = 'http://localhost:4000/employees';
+
+    async function getEmploees() {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: { 'x-access-token': accessToken }
+        })
+        const data = await response.json()
+        //Check if token is valid
+        if (!data.access) {
+            //The token is not valid!
+            location.href = './Login.html';
+            return
+        }
+
+        ShowsEmploeesInTable(data.response)
+    }
+
+    const getShiftsByEmployeeId = async (employeeId) => {
+        const url_shifts = 'http://localhost:4000/shifts';
+
+        const response = await fetch(url_shifts, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ employeeId })
+        })
+        const data = await response.json()
+        ShowsShiftsInTable(data)
+    }
+
+    const ShowsShiftsInTable = (allShifts) => {
+        var existingTable = document.getElementById('shiftsTable');
+        if (existingTable)
+            existingTable.remove();
+
+        //create a new table
+        const ourTable = document.createElement('table')
+        ourTable.setAttribute('border', '5');
+        ourTable.setAttribute('id', 'shiftsTable');
+
+        document.body.appendChild(ourTable);
+
+        //create titles for the table
+        var trObj_titles = document.createElement("tr");
+        var date_th = document.createElement("th")
+        var startingHour_th = document.createElement("th")
+        var endingHour_th = document.createElement("th")
+
+        date_th.innerText = "date"
+        startingHour_th.innerText = "startingHour"
+        endingHour_th.innerText = "endingHour"
+
+        trObj_titles.appendChild(date_th)
+        trObj_titles.appendChild(startingHour_th)
+        trObj_titles.appendChild(endingHour_th)
+
+        ourTable.appendChild(trObj_titles)
+
+        //
+
+        allShifts.forEach(shift => {
+
+            //Create 3 tds - columns
+            var tdObj1 = document.createElement("td");
+            var tdObj2 = document.createElement("td");
+            var tdObj3 = document.createElement("td");
+
+            //Add texts to the td's
+            tdObj1.innerText = `${shift.date}`;
+            tdObj2.innerText = shift.startingHour;
+            tdObj3.innerText = shift.endingHour;
+
+            //Crete row
+            var trObj = document.createElement("tr");
+
+            //Add the tds(columns) to the row
+            trObj.appendChild(tdObj1);
+            trObj.appendChild(tdObj2);
+            trObj.appendChild(tdObj3);
+
+
+            //enter a row to table:
+            ourTable.appendChild(trObj);
+        });
+
+    }
+
+    const ShowsEmploeesInTable = (allEmploees) => {
+        const ourTable = document.getElementById('emploeesTable');
+
+        //create titles for the table
+        var trObj_titles = document.createElement("tr");
+        var fullName_th = document.createElement("th")
+        var departments_th = document.createElement("th")
+        var shifts_th = document.createElement("th")
+
+        fullName_th.innerText = "Full-name"
+        departments_th.innerText = "Department"
+        shifts_th.innerText = "Shifts"
+
+        trObj_titles.appendChild(fullName_th)
+        trObj_titles.appendChild(departments_th)
+        trObj_titles.appendChild(shifts_th)
+
+        ourTable.appendChild(trObj_titles)
+        allEmploees.forEach(emploee => {
+
+            //Create 3 tds - columns
+            var tdObj1 = document.createElement("td");
+            var tdObj2 = document.createElement("td");
+            var tdObj3 = document.createElement("td");
+
+            //Add texts to the td's
+            tdObj1.innerText = `${emploee.fullName}`;
+            tdObj2.innerText = emploee.department;
+
+            var btn = document.createElement('input');
+            btn.type = "button";
+            btn.value = "Show";
+            btn.addEventListener('click', function () { getShiftsByEmployeeId(emploee.employeeId) });
+            tdObj3.appendChild(btn)
+
+            //Crete row
+            var trObj = document.createElement("tr");
+
+            //Add the tds(columns) to the row
+            trObj.appendChild(tdObj1);
+            trObj.appendChild(tdObj2);
+            trObj.appendChild(tdObj3);
+
+
+            //enter a row to table:
+            ourTable.appendChild(trObj);
+        });
+    }
 
     const disconnect = () => {
         sessionStorage.clear()
