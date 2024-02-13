@@ -37,8 +37,10 @@
             location.href = './Login.html';
             return
         }
-
+        
         ShowsEmploeesInTable(data.response)
+        
+        document.body.appendChild(document.createElement('br')); // new row in the page
     }
 
     const getShiftsByEmployeeId = async (employeeId) => {
