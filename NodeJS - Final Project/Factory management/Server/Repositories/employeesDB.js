@@ -5,4 +5,20 @@ const getAllEmployees = () => {
     return EmployeesModel.find();
 }
 
-module.exports = { getAllEmployees }
+const getEmployee = (employeeId) => {
+    return EmployeesModel.findById(employeeId);
+}
+
+const updateEmployee = async (employee) => {
+    return await EmployeesModel.findOneAndUpdate(
+        { "_id": employee.employeeId },
+        {
+            "firstName": employee.firstName,
+            "lastName": employee.lastName,
+            "startWorkYear": employee.startWorkYear,
+            "departmentId": employee.departmentId,
+        }
+    );
+}
+
+module.exports = { getAllEmployees, getEmployee, updateEmployee }

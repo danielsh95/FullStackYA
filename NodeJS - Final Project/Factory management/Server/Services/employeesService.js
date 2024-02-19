@@ -35,9 +35,44 @@ const getAllEmployees = async (token) => {
     }
 
     return {
-        "access": true,
+        "access": false,
         "response": "Error, Token not verify!"
     }
 }
 
-module.exports = { getAllEmployees }
+const getAllDetailsEmployee = async (token, employeeId) => {
+    if (CheckTokenVerify(token)) {
+        const employee = await employeesDB.getEmployee(employeeId);
+        const departmentId = employee.departmentId.toString();
+        console.log(employee.firstName);
+        console.log(departmentId);
+        const departmentName = await departmentsDB.getDepartment(departmentId)
+        const allDepartmentsNames = await departmentsDB.getAllDepartments()
+        return {
+            "allDepartmentsNames": allDepartmentsNames.map(dep => dep.name),
+            "firstName": `${employee.firstName}`,
+            "lastName": `${employee.lastName}`,
+            "startWorkYear": `${employee.startWorkYear}`,
+            "departmentName": `${departmentName.name}`,
+        }
+    }
+
+    return {
+        "access": false,
+        "response": "Error, Token not verify!"
+    }
+}
+
+const updateEmployee = async (employee) => {
+    const { employeeId, firstName, lastName, startWorkYear, departmentName } = employee
+    const foundDepartment = await departmentsDB.getDepartmentByName(departmentName);
+
+    const EmployeeToUpdate = {
+        employeeId, firstName, lastName, startWorkYear, "departmentId": foundDepartment._id
+    }
+
+    await employeesDB.updateEmployee(EmployeeToUpdate)
+    return 'updated'
+}
+
+module.exports = { getAllEmployees, getAllDetailsEmployee, updateEmployee }

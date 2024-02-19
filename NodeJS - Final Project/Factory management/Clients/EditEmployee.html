@@ -1,0 +1,94 @@
+<html>
+
+<head>
+    <button onclick="disconnect()">התנתק</button>
+    Hello, <label id="lbl_username"></label>
+    <h1>Welcome to EditEmployees page</h1>
+</head>
+
+<body onload="getEmployeeDetails()">
+    <label>First name: </label><br />
+    <input type="text" value="dd" id="txtFirstName" /><br /><br />
+    <label>Last name: </label><br />
+    <input type="text" id="txtLastName" /><br /><br />
+    <label>Start work year: </label><br />
+    <input type="text" id="txtStartWorkYear" /><br /><br />
+    <label>Department name: </label><br />
+
+    <select id="selectDepartmentName"></select><br /><br />
+
+
+    <input type="button" id="btUpdate" value="Update" onclick="Update()" />
+    <label id="lbl_message" />
+
+
+</body>
+
+
+<script>
+    const name = sessionStorage['name'];
+    document.getElementById('lbl_username').innerText = name
+
+    const accessToken = sessionStorage['accessToken'];
+    const url = new URL(window.location.href);
+    const employeeId = url.searchParams.get('employeeId');
+    const apiUrl = `http://localhost:4000/employees/employeeId/${employeeId}`;
+
+    const getEmployeeDetails = async () => {
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: { 'x-access-token': accessToken }
+        })
+        const data = await response.json()
+        //Check if token is valid
+        console.log(data);
+        console.log(data.firstName);
+        document.getElementById('txtFirstName').value = data.firstName;
+        document.getElementById('txtLastName').value = data.lastName;
+        document.getElementById('txtStartWorkYear').value = data.startWorkYear;
+
+        var selectElement = document.getElementById("selectDepartmentName");
+        // עדכן את הרשימה באמצעות לולאה
+        for (var i = 0; i < data.allDepartmentsNames.length; i++) {
+            var option = document.createElement("option");
+            option.text = data.allDepartmentsNames[i];
+            selectElement.add(option);
+        }
+
+        // הגדר ברירת מחדל לפי ה־data.departmentName
+        selectElement.value = data.departmentName;
+    }
+
+    const disconnect = () => {
+        sessionStorage.clear()
+        location.href = './Login.html';
+    }
+
+    const Update = async () => {
+        const update_url = 'http://localhost:4000/employees/updateEmployee'
+
+        const UpdateData = {
+            employeeId: employeeId,
+            firstName: document.getElementById('txtFirstName').value,
+            lastName: document.getElementById('txtLastName').value,
+            startWorkYear: document.getElementById('txtStartWorkYear').value,
+            departmentName: document.getElementById('selectDepartmentName').value
+        }
+
+        const response = await fetch(update_url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(UpdateData)
+        })
+
+        const data = await response.json();
+
+        if (!data.Succeeded) {
+            document.getElementById('lbl_message').innerText = data.response;
+            return
+        }
+    }
+
+</script>
+
+</html>

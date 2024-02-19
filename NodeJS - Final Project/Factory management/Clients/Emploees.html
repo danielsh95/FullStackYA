@@ -8,11 +8,11 @@
 <body onload="getEmploees()">
     <button onclick="disconnect()">התנתק</button>
     Hello, <label id="lbl_username"></label>
-    <h1>Welcome to Emploees page</h1>
+    <h1>Welcome to Employees page</h1>
 
-    <table id="emploeesTable" border="5" /> 
-    <br/> 
-    <br/>
+    <table id="emploeesTable" border="5" />
+    <br />
+    <br />
 
 
 
@@ -37,9 +37,9 @@
             location.href = './Login.html';
             return
         }
-        
+
         ShowsEmploeesInTable(data.response)
-        
+
         document.body.appendChild(document.createElement('br')); // new row in the page
     }
 
@@ -139,6 +139,11 @@
 
             //Add texts to the td's
             tdObj1.innerText = `${emploee.fullName}`;
+            tdObj1.addEventListener("click", function () {
+                // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
+                window.open("EditEmployee.html?employeeId=" + encodeURIComponent(emploee.employeeId), "_blank");
+            });
+
             tdObj2.innerText = emploee.department;
 
             var btn = document.createElement('input');
