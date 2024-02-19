@@ -18,7 +18,7 @@
     <select id="selectDepartmentName"></select><br /><br />
 
 
-    <input type="button" id="btUpdate" value="Update" onclick="Update()" />
+    <input type="button" value="Update" onclick="Update()" />
     <label id="lbl_message" />
 
 
@@ -82,11 +82,7 @@
         })
 
         const data = await response.json();
-
-        if (!data.Succeeded) {
-            document.getElementById('lbl_message').innerText = data.response;
-            return
-        }
+        document.getElementById('lbl_message').innerText = data.response;
     }
 
 </script>

@@ -68,11 +68,12 @@ const updateEmployee = async (employee) => {
     const foundDepartment = await departmentsDB.getDepartmentByName(departmentName);
 
     const EmployeeToUpdate = {
-        employeeId, firstName, lastName, startWorkYear, "departmentId": foundDepartment._id
+        employeeId, firstName, lastName, startWorkYear, "departmentId": foundDepartment._id.toString()
     }
 
-    await employeesDB.updateEmployee(EmployeeToUpdate)
-    return 'updated'
+    var result = await employeesDB.updateEmployee(EmployeeToUpdate)
+    console.log(result);
+    return { 'response': 'updated' }
 }
 
 module.exports = { getAllEmployees, getAllDetailsEmployee, updateEmployee }

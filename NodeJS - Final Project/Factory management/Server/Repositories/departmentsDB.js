@@ -10,7 +10,7 @@ const getDepartment = (departmentId) => {
 }
 
 const getDepartmentByName = (departmentName) => {
-    return DepartmentsModel.find({ 'name': departmentName });
+    return DepartmentsModel.findOne({ 'name': departmentName });
 }
 
 module.exports = { getAllDepartments, getDepartment, getDepartmentByName }
