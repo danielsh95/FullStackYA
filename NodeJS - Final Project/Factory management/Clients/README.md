@@ -5,3 +5,7 @@ Login page:
 Employee page:
 
 ![Employee](cuptureImages/captureEmployee.jpg)
+
+EditEmployee page:
+
+![Employee](captureEditEmployee.jpg)
