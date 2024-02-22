@@ -23,4 +23,10 @@ router.post('/updateEmployee', async (req, res) => {
     res.send(response)
 })
 
+router.post('/deleteEmployee', async (req, res) => {
+    const employeeId = req.body.employeeId;
+    const response = await employeesService.deleteEmployee(employeeId)
+    res.send(response)
+})
+
 module.exports = router

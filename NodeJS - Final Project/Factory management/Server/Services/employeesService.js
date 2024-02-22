@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const employeesDB = require('../Repositories/employeesDB')
 const departmentsDB = require('../Repositories/departmentsDB')
+const employeeShiftsDB = require('../Repositories/employeeShiftsDB')
+
 
 
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -76,4 +78,11 @@ const updateEmployee = async (employee) => {
     return { 'response': 'updated' }
 }
 
-module.exports = { getAllEmployees, getAllDetailsEmployee, updateEmployee }
+const deleteEmployee = async (employeeId) => {
+    employeeShiftsDB.deleteEmployeeShifts(employeeId)
+    await employeesDB.deleteEmployee(employeeId)
+
+    return { "response": 'deleted!' }
+}
+
+module.exports = { getAllEmployees, getAllDetailsEmployee, updateEmployee, deleteEmployee }

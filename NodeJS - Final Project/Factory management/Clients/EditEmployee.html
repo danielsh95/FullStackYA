@@ -2,6 +2,7 @@
 
 <head>
     <button onclick="disconnect()">התנתק</button>
+    <button onclick="location.href='./Emploees.html';">&#129144;</button>
     Hello, <label id="lbl_username"></label>
     <h1>Welcome to EditEmployees page</h1>
 </head>
@@ -17,8 +18,8 @@
 
     <select id="selectDepartmentName"></select><br /><br />
 
-
-    <input type="button" value="Update" onclick="Update()" />
+    <input type="button" value="Update" onclick="Update()" /> <br />
+    <input type="button" value="Delete" onclick="Delete()" /> <br />
     <label id="lbl_message" />
 
 
@@ -40,9 +41,8 @@
             headers: { 'x-access-token': accessToken }
         })
         const data = await response.json()
+
         //Check if token is valid
-        console.log(data);
-        console.log(data.firstName);
         document.getElementById('txtFirstName').value = data.firstName;
         document.getElementById('txtLastName').value = data.lastName;
         document.getElementById('txtStartWorkYear').value = data.startWorkYear;
@@ -57,6 +57,12 @@
 
         // הגדר ברירת מחדל לפי ה־data.departmentName
         selectElement.value = data.departmentName;
+
+        // new row in the page
+        document.body.appendChild(document.createElement('br'));
+
+        //show Shifts for employee:
+        getShiftsByEmployeeId()
     }
 
     const disconnect = () => {
@@ -83,8 +89,146 @@
 
         const data = await response.json();
         document.getElementById('lbl_message').innerText = data.response;
+        location.href = './Emploees.html';
     }
 
+    const Delete = async () => {
+        const delete_url = 'http://localhost:4000/employees/deleteEmployee'
+
+        const response = await fetch(delete_url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ employeeId })
+        })
+
+        const data = await response.json();
+        document.getElementById('lbl_message').innerText = data.response;
+        location.href = './Emploees.html';
+    }
+
+    const getShiftsByEmployeeId = async () => {
+        const url_shifts = 'http://localhost:4000/shifts/registerAndUnregister';
+
+        const response = await fetch(url_shifts, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ employeeId })
+        })
+        const data = await response.json()
+        //registered Shifts
+
+        ShowsShiftsInTable(data.registeredShifts)
+
+        // new row in the page
+        document.body.appendChild(document.createElement('br'));
+
+        //unRegisteredShifts
+        showShiftsInSelect(data.unregisteredShifts);
+
+    }
+
+    const ShowsShiftsInTable = (allShifts) => {
+        var existingTable = document.getElementById('shiftsTable');
+        if (existingTable)
+            existingTable.remove();
+
+        //create a new table
+        const ourTable = document.createElement('table')
+        ourTable.setAttribute('border', '5');
+        ourTable.setAttribute('id', 'shiftsTable');
+
+        document.body.appendChild(ourTable);
+
+        //create titles for the table
+        var trObj_titles = document.createElement("tr");
+        var date_th = document.createElement("th")
+        var startingHour_th = document.createElement("th")
+        var endingHour_th = document.createElement("th")
+
+        date_th.innerText = "date"
+        startingHour_th.innerText = "startingHour"
+        endingHour_th.innerText = "endingHour"
+
+        trObj_titles.appendChild(date_th)
+        trObj_titles.appendChild(startingHour_th)
+        trObj_titles.appendChild(endingHour_th)
+
+        ourTable.appendChild(trObj_titles)
+
+        //
+
+        allShifts.forEach(shift => {
+
+            //Create 3 tds - columns
+            var tdObj1 = document.createElement("td");
+            var tdObj2 = document.createElement("td");
+            var tdObj3 = document.createElement("td");
+
+            //Add texts to the td's
+            tdObj1.innerText = `${shift.date}`;
+            tdObj2.innerText = shift.startingHour;
+            tdObj3.innerText = shift.endingHour;
+
+            //Crete row
+            var trObj = document.createElement("tr");
+
+            //Add the tds(columns) to the row
+            trObj.appendChild(tdObj1);
+            trObj.appendChild(tdObj2);
+            trObj.appendChild(tdObj3);
+
+
+            //enter a row to table:
+            ourTable.appendChild(trObj);
+        });
+
+    }
+
+    const showShiftsInSelect = async (Shifts) => {
+        // new row in the page
+        const selectElementShifts = document.createElement('select')
+        selectElementShifts.id = "selectElementShifts"
+
+        // עדכן את הרשימה באמצעות לולאה
+        for (var i = 0; i < Shifts.length; i++) {
+            var option = document.createElement("option");
+            option.text = `${Shifts[i].date}     ${Shifts[i].startingHour}:00 -> ${Shifts[i].endingHour}:00`;
+
+            // הוסף attribute נסתר עם המזהה
+            option.setAttribute("shiftId", Shifts[i]._id);
+
+            selectElementShifts.add(option);
+        }
+        document.body.appendChild(selectElementShifts);
+
+        const buttonToSignShift = document.createElement('input')
+        buttonToSignShift.type = 'button'
+        buttonToSignShift.value = "Sign shift"
+        buttonToSignShift.addEventListener('click', async () => {
+            const selectedOption = selectElementShifts.options[selectElementShifts.selectedIndex];
+            const shiftId = selectedOption.getAttribute("shiftId");
+            await signEmployeeShift(shiftId);
+        })
+        document.body.appendChild(buttonToSignShift);
+    }
+
+    const signEmployeeShift = async (shiftId) => {
+        const dataSignEmployeeShift = {
+            "employeeId": employeeId,
+            "shiftId": shiftId
+        }
+
+        const url_signShift = 'http://localhost:4000/shifts/signShift';
+
+        const response = await fetch(url_signShift, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dataSignEmployeeShift)
+        })
+        const data = await response.json()
+        document.getElementById('lbl_message').innerText = data.response;
+        //getShiftsByEmployeeId()
+    }
 </script>
 
 </html>

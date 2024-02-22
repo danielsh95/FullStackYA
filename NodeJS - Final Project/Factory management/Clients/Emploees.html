@@ -44,7 +44,7 @@
     }
 
     const getShiftsByEmployeeId = async (employeeId) => {
-        const url_shifts = 'http://localhost:4000/shifts';
+        const url_shifts = 'http://localhost:4000/shifts/registered';
 
         const response = await fetch(url_shifts, {
             method: 'POST',
@@ -52,6 +52,7 @@
             body: JSON.stringify({ employeeId })
         })
         const data = await response.json()
+        console.log(data);
         ShowsShiftsInTable(data)
     }
 

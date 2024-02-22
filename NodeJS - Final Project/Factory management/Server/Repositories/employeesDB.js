@@ -1,6 +1,7 @@
 const EmployeesModel = require('../Models/employeesModel')
 
 
+
 const getAllEmployees = () => {
     return EmployeesModel.find();
 }
@@ -21,4 +22,8 @@ const updateEmployee = async (employee) => {
     );
 }
 
-module.exports = { getAllEmployees, getEmployee, updateEmployee }
+const deleteEmployee = (employeeId) => {
+    return EmployeesModel.findOneAndDelete(employeeId)
+}
+
+module.exports = { getAllEmployees, getEmployee, updateEmployee, deleteEmployee }
