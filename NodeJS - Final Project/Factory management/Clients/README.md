@@ -1,3 +1,7 @@
 Login page:
 
-![Login](captureLogin.jpg)
+![Login](cuptureImages/captureLogin.jpg)
+
+Employee page:
+
+![Employee](cuptureImages/captureEmployee.jpg)
