@@ -8,4 +8,4 @@ Employee page:
 
 EditEmployee page:
 
-![Employee](captureEditEmployee.jpg)
+![Employee](cuptureImages/captureEditEmployee.jpg)
