@@ -1,0 +1,80 @@
+<html>
+
+<head>
+    <button onclick="disconnect()">התנתק</button>
+    <button onclick="location.href='./Emploees.html';">&#129144;</button>
+    Hello, <label id="lbl_username"></label>
+    <h1>Welcome to AddEmployee page</h1>
+</head>
+
+<body onload="InitPage()">
+    FirstName: <input type="text" id="txtFirstName" value="beni" /><br />
+    LastName: <input type="text" id="txtLastName" value="gantz" /><br />
+    StartWorkYear: <input type="text" id="txtStartWorkYear" value="2016" /><br />
+    Department: <select id="selectDepartment" /> <br /><br />
+    <input type="submit" value="Add" id="btnAddEmployee" onclick="AddEmployee()" />
+    <label id="lblMessage" />
+
+</body>
+
+<script>
+    const accessToken = sessionStorage['accessToken'];
+    const name = sessionStorage['name'];
+    document.getElementById('lbl_username').innerText = name
+    const url_server = 'http://localhost:4000/';
+
+    const disconnect = () => {
+        sessionStorage.clear()
+        location.href = './Login.html';
+    }
+
+    const InitPage = async () => {
+        const response = await fetch(`${url_server}departments/getAll`, {
+            method: 'GET',
+            headers: { 'x-access-token': accessToken }
+        })
+        const data = await response.json()
+        //Check if token is valid
+        if (!data.access) {
+        }
+
+        //The token valid:
+
+        const allDepartments = data.response;
+
+        var selectElement = document.getElementById("selectDepartment");
+        // עדכן את הרשימה באמצעות לולאה
+        for (var i = 0; i < allDepartments.length; i++) {
+            var option = document.createElement("option");
+            option.text = allDepartments[i].name;
+            option.setAttribute("departmentId", allDepartments[i]._id);
+            selectElement.add(option);
+        }
+
+
+    }
+
+    const AddEmployee = async () => {
+        var selectElement = document.getElementById("selectDepartment");
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        const departmentId = selectedOption.getAttribute("departmentId");
+        const data = {
+            "firstName": document.getElementById("txtFirstName").value,
+            "lastName": document.getElementById("txtLastName").value,
+            "startWorkYear": document.getElementById("txtStartWorkYear").value,
+            "departmentId": departmentId
+        }
+
+        console.log(data);
+        const response = await fetch(`${url_server}employees/NewEmployee`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+
+        const respData = await response.json()
+        document.getElementById('lblMessage').innerText = respData.response;
+    }
+</script>
+
+</html>

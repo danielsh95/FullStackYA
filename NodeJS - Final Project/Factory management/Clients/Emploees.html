@@ -10,9 +10,12 @@
     Hello, <label id="lbl_username"></label>
     <h1>Welcome to Employees page</h1>
 
+    <input type="button" value="Add employee" onclick="location.href='./AddEmployee.html';" />
+
     <table id="emploeesTable" border="5" />
     <br />
     <br />
+
 
 
 
@@ -20,7 +23,6 @@
 <script>
     const accessToken = sessionStorage['accessToken'];
     const name = sessionStorage['name'];
-    //const userId = sessionStorage['userId'];
     document.getElementById('lbl_username').innerText = name
 
     const url = 'http://localhost:4000/employees';
@@ -146,6 +148,10 @@
             });
 
             tdObj2.innerText = emploee.department;
+            tdObj2.addEventListener("click", function () {
+                // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
+                window.open("EditDepartment.html");
+            });
 
             var btn = document.createElement('input');
             btn.type = "button";

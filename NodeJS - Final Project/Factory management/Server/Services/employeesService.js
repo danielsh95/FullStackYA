@@ -85,4 +85,11 @@ const deleteEmployee = async (employeeId) => {
     return { "response": 'deleted!' }
 }
 
-module.exports = { getAllEmployees, getAllDetailsEmployee, updateEmployee, deleteEmployee }
+const addEmployee = (objEmployee) => {
+    employeesDB.addEmployee(objEmployee);
+    return {
+        'response': 'added!'
+    }
+}
+
+module.exports = { getAllEmployees, getAllDetailsEmployee, updateEmployee, deleteEmployee, addEmployee }

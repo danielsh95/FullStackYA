@@ -8,4 +8,7 @@ Employee page:
 
 EditEmployee page:
 
-![Employee](cuptureImages/captureEditEmployee.jpg)
+![EditEmployee](cuptureImages/captureEditEmployee.jpg)
+
+AddEmpolyee page:
+![AddEmployee](cuptureImages/captureAddEmployee.jpg)

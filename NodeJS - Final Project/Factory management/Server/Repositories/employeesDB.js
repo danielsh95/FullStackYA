@@ -26,4 +26,10 @@ const deleteEmployee = (employeeId) => {
     return EmployeesModel.findOneAndDelete(employeeId)
 }
 
-module.exports = { getAllEmployees, getEmployee, updateEmployee, deleteEmployee }
+const addEmployee = (objEmployee) => {
+    console.log(objEmployee);
+    const newEmployee = new EmployeesModel(objEmployee);
+    return newEmployee.save()
+}
+
+module.exports = { getAllEmployees, getEmployee, updateEmployee, deleteEmployee, addEmployee }

@@ -29,4 +29,12 @@ router.post('/deleteEmployee', async (req, res) => {
     res.send(response)
 })
 
+router.post('/NewEmployee', async (req, res) => {
+    const objEmployee = req.body;
+    console.log("fsssssssssssss");
+    const response = await employeesService.addEmployee(objEmployee)
+    res.send(response)
+})
+
+
 module.exports = router
