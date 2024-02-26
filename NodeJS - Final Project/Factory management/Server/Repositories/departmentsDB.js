@@ -13,4 +13,14 @@ const getDepartmentByName = (departmentName) => {
     return DepartmentsModel.findOne({ 'name': departmentName });
 }
 
-module.exports = { getAllDepartments, getDepartment, getDepartmentByName }
+const updateDepartment = async (departmentId, name, managerId) => {
+    return await DepartmentsModel.findByIdAndUpdate(
+        departmentId,
+        {
+            "name": name,
+            "Manager": managerId
+        }
+    );
+}
+
+module.exports = { getAllDepartments, getDepartment, getDepartmentByName, updateDepartment }

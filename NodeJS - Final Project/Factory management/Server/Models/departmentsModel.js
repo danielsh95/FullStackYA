@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const departmentSchema = mongoose.Schema(
     {
         "name": String,
-        "Manager": Number
+        "Manager": mongoose.Types.ObjectId
     },
     {
         versionKey: false

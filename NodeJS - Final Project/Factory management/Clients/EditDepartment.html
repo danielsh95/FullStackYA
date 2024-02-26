@@ -1,9 +1,77 @@
 <html>
-    <head>
 
-    </head>
+<head>
 
-    <body>
-        
-    </body>
+</head>
+
+<body onload="loadDetails()">
+    Name: <input type="text" id="txtDepartmentName" /> <br />
+    Manager: <select id="selectManager" />
+
+    <input type="button" value="Update" onclick="UpdateDepartment()" />
+</body>
+<script>
+    const accessToken = sessionStorage['accessToken'];
+    const url_server = 'http://localhost:4000/';
+    const url = new URL(window.location.href);
+    const departmentName = url.searchParams.get('departmentName');
+    var departmentId = undefined
+
+    const loadDetails = async () => {
+        const response = await fetch(`${url_server}departments/detailsDepartment/${departmentName}`, {
+            method: 'GET',
+            headers: { 'x-access-token': accessToken }
+        })
+        const data = await response.json()
+        //Check if token is valid
+        if (!data.access) {
+        }
+
+        //The token valid:
+        console.log(data.response);
+        addDetailsToFields(data.response)
+        departmentId = data.response.departmentId;
+    }
+
+    function addDetailsToFields(data) {
+        document.getElementById('txtDepartmentName').value = departmentName;
+        const selectManager = document.getElementById('selectManager')
+
+        for (var i = 0; i < data.allEmployees.length; i++) {
+            console.log('option.text');
+            var option = document.createElement("option");
+            option.text = data.allEmployees[i].firstName + ' ' + data.allEmployees[i].lastName;
+            option.setAttribute("employeeId", data.allEmployees[i]._id);
+
+            selectManager.add(option);
+        }
+        selectManager.value = data.manager.firstName + ' ' + data.manager.lastName
+    }
+
+    const UpdateDepartment = async () => {
+        const selectElement = document.getElementById('selectManager')
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        const employeeId = selectedOption.getAttribute("employeeId");
+        const dataDepartment = {
+            'name': document.getElementById('txtDepartmentName').value,
+            'managerId': employeeId,
+            'departmentId': departmentId
+        }
+
+        console.log('departmentId');
+        console.log(dataDepartment);
+        console.log(dataDepartment.managerId);
+
+        const response = await fetch(`${url_server}departments/update`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dataDepartment)
+        })
+
+        const data = await response.json()
+        console.log(data);
+        location.href = './Emploees.html';        
+    }
+</script>
+
 </html>
