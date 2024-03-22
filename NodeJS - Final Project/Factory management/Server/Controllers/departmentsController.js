@@ -24,4 +24,11 @@ router.put('/update', async (req, res) => {
     const response = await departmentsService.updateDepartment(departmentId, name, managerId);
     res.send(response);
 })
+
+router.delete('/delete', async (req, res) => {
+    const departmentId = req.body.departmentId
+    const response = await departmentsService.deleteDepartment(departmentId);
+    res.send(response);
+})
+
 module.exports = router;

@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 
 const employeeShiftsSchema = mongoose.Schema(
     {
-        "employeeId": mongoose.Types.ObjectId,
-        "shiftId": mongoose.Types.ObjectId
+        "employeeId": String,
+        "shiftId": String
     },
     {
         versionKey: false

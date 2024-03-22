@@ -41,8 +41,9 @@ const getDetailsEditDepartments = async (token, departmentName) => {
             'access': true,
             "response": {
                 'departmentId': ourDepartment._id,
-                'manager': allEmployees.find(employee => employee._id.toString() == ourDepartment.Manager.toString()),
-                'allEmployees': allEmployees
+                'manager': allEmployees.find(employee => employee._id.toString() == ourDepartment.Manager),
+                'allEmployees': allEmployees,
+                'UnregisteredEmployee': allEmployees.filter(employee => employee.departmentId != ourDepartment._id.toString())
             }
         }
     }
@@ -52,11 +53,26 @@ const getDetailsEditDepartments = async (token, departmentName) => {
     }
 }
 
-const updateDepartment = async(departmentId, name, managerId) => {
+const updateDepartment = async (departmentId, name, managerId) => {
     await departmentsDB.updateDepartment(departmentId, name, managerId);
     return {
         'response': 'Updated!'
     }
 }
 
-module.exports = { CheckTokenVerify, getAlldepartments, getDetailsEditDepartments, updateDepartment }
+const deleteDepartment = async (departmentId) => {
+
+    //Delete all employees belongs to that department
+    const response = await employeesDB.deleteByDepartmentId(departmentId)
+
+    //Delete department
+    await departmentsDB.deleteDepartment(departmentId)
+
+    if (response.deletedCount == 0)
+        return { 'isSucceed': false, 'response': `Note, dont have any employees that belong to department!` }
+    else
+        return { 'isSucceed': true, 'response': 'Deleted!' }
+}
+
+
+module.exports = { CheckTokenVerify, getAlldepartments, getDetailsEditDepartments, updateDepartment, deleteDepartment }

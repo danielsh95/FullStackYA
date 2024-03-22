@@ -29,7 +29,7 @@ const getAllEmployees = async (token) => {
             "response": allEmployees.map(employee => {
                 return {
                     "fullName": `${employee.firstName} ${employee.lastName}`,
-                    "department": allDepartments.find(dep => dep._id == employee.departmentId.toString()).name,
+                    "department": allDepartments.find(dep => dep._id == employee.departmentId).name,
                     "employeeId": employee._id
                 }
             })
@@ -92,4 +92,11 @@ const addEmployee = (objEmployee) => {
     }
 }
 
-module.exports = { getAllEmployees, getAllDetailsEmployee, updateEmployee, deleteEmployee, addEmployee }
+const registerEmployeeToDepartment = async (employeeId, departmentId) => {
+    await employeesDB.updateDepartmentForEmployee(employeeId, departmentId)
+    return {
+        'response': 'The employee was successfully added to the department!'
+    }
+}
+
+module.exports = { getAllEmployees, getAllDetailsEmployee, updateEmployee, deleteEmployee, addEmployee, registerEmployeeToDepartment }

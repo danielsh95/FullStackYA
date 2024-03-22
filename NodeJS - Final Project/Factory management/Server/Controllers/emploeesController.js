@@ -31,8 +31,14 @@ router.post('/deleteEmployee', async (req, res) => {
 
 router.post('/NewEmployee', async (req, res) => {
     const objEmployee = req.body;
-    console.log("fsssssssssssss");
     const response = await employeesService.addEmployee(objEmployee)
+    res.send(response)
+})
+
+router.post('/registerEmployeeToDepartment', async (req, res) => {
+    const departmentId = req.body.departmentId;
+    const employeeId = req.body.employeeId;
+    const response = await employeesService.registerEmployeeToDepartment(employeeId, departmentId)
     res.send(response)
 })
 

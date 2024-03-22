@@ -1,7 +1,10 @@
 <html>
 
 <head>
-
+    <button onclick="disconnect()">התנתק</button>
+    <button onclick="location.href='./Emploees.html';">&#129144;</button>
+    Hello, <label id="lbl_username"></label>
+    <h1>Welcome to EditDepartment page</h1>
 </head>
 
 <body onload="loadDetails()">
@@ -9,13 +12,26 @@
     Manager: <select id="selectManager" />
 
     <input type="button" value="Update" onclick="UpdateDepartment()" />
+    <input type="button" value="Delete department" onclick="DeleteDepartment()" /> <br />
+    <label id="lbl_message" /> <br />
+
+    Add employee: <select id="selectAddEmployee" />
+    <input type="button" value="Add employee" onclick="AddEmployee()" /> <br />
+
 </body>
 <script>
     const accessToken = sessionStorage['accessToken'];
+    const name = sessionStorage['name'];
+    document.getElementById('lbl_username').innerText = name
     const url_server = 'http://localhost:4000/';
     const url = new URL(window.location.href);
     const departmentName = url.searchParams.get('departmentName');
     var departmentId = undefined
+
+    const disconnect = () => {
+        sessionStorage.clear()
+        location.href = './Login.html';
+    }
 
     const loadDetails = async () => {
         const response = await fetch(`${url_server}departments/detailsDepartment/${departmentName}`, {
@@ -28,17 +44,18 @@
         }
 
         //The token valid:
-        console.log(data.response);
         addDetailsToFields(data.response)
         departmentId = data.response.departmentId;
     }
 
     function addDetailsToFields(data) {
-        document.getElementById('txtDepartmentName').value = departmentName;
-        const selectManager = document.getElementById('selectManager')
 
+        //DepartmentName
+        document.getElementById('txtDepartmentName').value = departmentName;
+
+        //Manager:
+        const selectManager = document.getElementById('selectManager')
         for (var i = 0; i < data.allEmployees.length; i++) {
-            console.log('option.text');
             var option = document.createElement("option");
             option.text = data.allEmployees[i].firstName + ' ' + data.allEmployees[i].lastName;
             option.setAttribute("employeeId", data.allEmployees[i]._id);
@@ -46,6 +63,16 @@
             selectManager.add(option);
         }
         selectManager.value = data.manager.firstName + ' ' + data.manager.lastName
+
+        //UnregisteredEmployee:
+        const selectAddEmployee = document.getElementById('selectAddEmployee')
+        for (var i = 0; i < data.UnregisteredEmployee.length; i++) {
+            var option = document.createElement("option");
+            option.text = data.UnregisteredEmployee[i].firstName + ' ' + data.UnregisteredEmployee[i].lastName;
+            option.setAttribute("employeeId", data.UnregisteredEmployee[i]._id);
+
+            selectAddEmployee.add(option);
+        }
     }
 
     const UpdateDepartment = async () => {
@@ -58,10 +85,6 @@
             'departmentId': departmentId
         }
 
-        console.log('departmentId');
-        console.log(dataDepartment);
-        console.log(dataDepartment.managerId);
-
         const response = await fetch(`${url_server}departments/update`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -69,9 +92,43 @@
         })
 
         const data = await response.json()
-        console.log(data);
-        location.href = './Emploees.html';        
+        location.href = './Emploees.html';
     }
+
+    const DeleteDepartment = async () => {
+
+        const response = await fetch(`${url_server}departments/delete`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ departmentId })
+        })
+
+        const data = await response.json()
+        if (!data.isSucceed)
+            document.getElementById('lbl_message').innerText = data.response
+    }
+
+    const AddEmployee = async () => {
+        const selectElement = document.getElementById('selectAddEmployee')
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        const employeeId = selectedOption.getAttribute("employeeId");
+        const dataAddEmployee = {
+            departmentId,
+            employeeId
+        }
+
+        const response = await fetch(`${url_server}employees/registerEmployeeToDepartment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dataAddEmployee)
+        })
+
+
+        const data = await response.json()
+        console.log(data);
+        document.getElementById('lbl_message').innerText = data.response
+    }
+
 </script>
 
 </html>

@@ -23,4 +23,8 @@ const updateDepartment = async (departmentId, name, managerId) => {
     );
 }
 
-module.exports = { getAllDepartments, getDepartment, getDepartmentByName, updateDepartment }
+const deleteDepartment = (departmentId) => {
+    return DepartmentsModel.findByIdAndDelete(departmentId);
+}
+
+module.exports = { getAllDepartments, getDepartment, getDepartmentByName, updateDepartment, deleteDepartment }

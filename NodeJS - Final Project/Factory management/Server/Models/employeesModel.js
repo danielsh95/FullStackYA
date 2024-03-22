@@ -5,7 +5,7 @@ const employeeSchema = mongoose.Schema(
         "firstName": String,
         "lastName": String,
         "startWorkYear": Number,
-        "departmentId": mongoose.Types.ObjectId
+        "departmentId": String
     },
     {
         versionKey: false

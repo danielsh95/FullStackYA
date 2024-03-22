@@ -22,8 +22,13 @@ const updateEmployee = async (employee) => {
     );
 }
 
-const deleteEmployee = (employeeId) => {
-    return EmployeesModel.findOneAndDelete(employeeId)
+const deleteEmployee = async (employeeId) => {
+    console.log(employeeId);
+    return await EmployeesModel.findOneAndDelete(employeeId)
+}
+
+const deleteByDepartmentId = (departmentId) => {
+    return EmployeesModel.deleteMany({ "departmentId": departmentId });
 }
 
 const addEmployee = (objEmployee) => {
@@ -32,4 +37,13 @@ const addEmployee = (objEmployee) => {
     return newEmployee.save()
 }
 
-module.exports = { getAllEmployees, getEmployee, updateEmployee, deleteEmployee, addEmployee }
+const updateDepartmentForEmployee = (employeeId, departmentId) => {
+    return EmployeesModel.findOneAndUpdate(
+        { "_id": employeeId },
+        {
+            "departmentId": departmentId
+        }
+    );
+}
+
+module.exports = { getAllEmployees, getEmployee, updateEmployee, deleteEmployee, addEmployee, deleteByDepartmentId, updateDepartmentForEmployee}
