@@ -8,13 +8,11 @@ function DynamicComp() {
   { Name: 'Dov', Age: '31', City: 'Ashdod' },
   { Name: 'Vered', Age: '19', City: 'Eilat' }])
 
-  const [personName, setPersonName] = useState('')
-  const [personAge, setPersonAge] = useState('')
-  const [personCity, setPersonCity] = useState('')
+  const [per, setPer] = useState({ Name: '', Age: '', City: '' })
 
   // Dynamic html:
   return (
-    <div className="App">
+    <div>
       <table border={2}>
         <thead>
           <tr><th>Name</th><th>Age</th><th>City</th></tr>
@@ -36,28 +34,26 @@ function DynamicComp() {
       <ul>
         {
           person.map((p, index) => {
-            return < ul key={index}>
-              <li>{p.Name}</li>
+            return < li key={index}>
+              {p.Name}
               <ul>
                 <li>{p.Age}</li>
                 <li>{p.City}</li>
               </ul>
-            </ul>
-
+            </li>
           })
         }
       </ul>
-
       <br />
       <br />
 
-{/* Repeater: */}
-      
-      Add new person: <br /> Name: <input type='text' onChange={e => setPersonName(e.target.value)} />
-      age: <input type='text' onChange={e => setPersonAge(e.target.value)} />
-      city: <input type='text' onChange={e => setPersonCity(e.target.value)} /> <br /> <br />
+      {/* Repeater: */}
+
+      Add new person: <br /> Name: <input type='text' onChange={e => setPer({ ...per, Name: e.target.value })} />
+      age: <input type='text' onChange={e => setPer({ ...per, Age: e.target.value })} />
+      city: <input type='text' onChange={e => setPer({ ...per, City: e.target.value })} /> <br /> <br />
       <input style={{ width: 100, fontSize: '20px' }} value={'Add'} type='button'
-        onClick={() => setperson([...person, { Name: personName, Age: personAge, City: personCity }])} />
+        onClick={() => setperson([...person, per])} />
 
     </div >
   );
