@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <button onclick="disconnect()">התנתק</button>
+    Hello, <label id="lbl_username"></label>
+    <h1>Welcome to Home page</h1>
+    <script>
+        const name = sessionStorage['name'];
+        document.getElementById('lbl_username').innerText = name
+        const disconnect = () => {
+            sessionStorage.clear()
+            location.href = './Login.html';
+        }
+    </script>
+</head>
+
+<body>
+    <div style="grid-template-columns: 1fr 1fr 1fr ;display: grid; grid-auto-rows: 1fr; text-align: center;">
+        <div style='border: 5px solid rgb(32, 214, 72);'>
+            <button onclick="{location.href = './Emploees.html';}" >Employees</button>
+        </div>
+        <div style='border: 5px solid rgb(190, 28, 190);'>
+            <button onclick="{location.href = './Department.html';}" >Departments</button>
+
+        </div>
+        <div style='border: 5px solid rgb(57, 22, 182);'>
+            Foo:
+
+        </div>
+    </div>
+</body>
+
+</html>

@@ -32,6 +32,31 @@ const getAlldepartments = async (token) => {
     }
 }
 
+const getAllDepWithTheirEmployees = async (token) => {
+    const result = CheckTokenVerify(token)
+    if (result) {
+        const allDepartments = await departmentsDB.getAllDepartments();
+        const allEmployees = await employeesDB.getAllEmployees();
+
+        return {
+            'access': true,
+            "response": {
+                'departments': allDepartments.map(dept => {
+                    return {
+                        'department': dept,
+                        'departmentMamager': allEmployees.find(emp => emp._id.toString() == dept.Manager),
+                        'employees': allEmployees.filter(emp => dept._id.toString() == emp.departmentId)
+                    }
+                })
+            }
+        }
+    }
+    return {
+        'access': false,
+        "response": 'Error, inValid token!'
+    }
+}
+
 const getDetailsEditDepartments = async (token, departmentName) => {
     const result = CheckTokenVerify(token)
     if (result) {
@@ -74,5 +99,19 @@ const deleteDepartment = async (departmentId) => {
         return { 'isSucceed': true, 'response': 'Deleted!' }
 }
 
+const addDepartment = (objDept, token) => {
+    const result = CheckTokenVerify(token)
+    if (result) {
+        departmentsDB.addDepartment(objDept);
+        return {
+            'access': true,
+            'response': 'added!'
+        }
+    }
+    return {
+        'access': false,
+        "response": 'Error, inValid token!'
+    }
+}
 
-module.exports = { CheckTokenVerify, getAlldepartments, getDetailsEditDepartments, updateDepartment, deleteDepartment }
+module.exports = { CheckTokenVerify, getAlldepartments, getDetailsEditDepartments, updateDepartment, deleteDepartment, getAllDepWithTheirEmployees, addDepartment }

@@ -62,7 +62,8 @@
 
             selectManager.add(option);
         }
-        selectManager.value = data.manager.firstName + ' ' + data.manager.lastName
+        if (data.manager)
+            selectManager.value = data.manager.firstName + ' ' + data.manager.lastName
 
         //UnregisteredEmployee:
         const selectAddEmployee = document.getElementById('selectAddEmployee')

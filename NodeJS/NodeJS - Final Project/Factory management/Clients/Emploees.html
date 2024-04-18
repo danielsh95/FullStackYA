@@ -158,13 +158,13 @@
             tdObj1.innerText = `${emploee.fullName}`;
             tdObj1.addEventListener("click", function () {
                 // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
-                window.open("EditEmployee.html?employeeId=" + encodeURIComponent(emploee.employeeId), "_blank");
+                window.open("EditEmployee.html?employeeId=" + encodeURIComponent(emploee.employeeId), "_self");
             });
 
             tdObj2.innerText = emploee.department;
             tdObj2.addEventListener("click", function () {
                 // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
-                window.open("EditDepartment.html?departmentName=" + encodeURIComponent(emploee.department), "_blank");
+                window.open("EditDepartment.html?departmentName=" + encodeURIComponent(emploee.department), "_self");
             });
 
             var btn = document.createElement('input');

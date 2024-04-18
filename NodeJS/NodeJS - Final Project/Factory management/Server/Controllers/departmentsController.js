@@ -8,11 +8,25 @@ router.get('/getAll', async (req, res) => {
     const response = await departmentsService.getAlldepartments(token);
     res.send(response);
 })
+
+router.get('/getAllDepWithTheirEmployees', async (req, res) => {
+    const token = req.headers['x-access-token']
+    const response = await departmentsService.getAllDepWithTheirEmployees(token);
+    res.send(response);
+})
+
 router.get('/detailsDepartment/:name', async (req, res) => {
     const token = req.headers['x-access-token']
     const departmentName = req.params.name
     const response = await departmentsService.getDetailsEditDepartments(token, departmentName);
     res.send(response);
+})
+
+router.post('/AddDepartmet', async (req, res) => {
+    const token = req.headers['x-access-token']
+    const objDept = req.body;
+    const response = await departmentsService.addDepartment(objDept, token)
+    res.send(response)
 })
 
 router.put('/update', async (req, res) => {

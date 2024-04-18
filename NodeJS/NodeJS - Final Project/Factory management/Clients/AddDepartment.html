@@ -1,0 +1,52 @@
+<html style="border: 5px solid rgb(233, 149, 236); width: 350px; height: 200px; padding: 10px;">
+
+<head>
+    <button onclick="disconnect()">התנתק</button>
+    <button onclick="location.href='./Department.html';">&#129144;</button>
+    Hello, <label id="lbl_username"></label>
+    <h1>Welcome to AddDepartment page</h1>
+</head>
+
+<body>
+    <input type="text" id="txtDepartment" />
+    <input type="submit" onclick="AddDepartment()" value="Add" />
+
+    <script>
+        const accessToken = sessionStorage['accessToken'];
+        const name = sessionStorage['name'];
+        document.getElementById('lbl_username').innerText = name
+        
+        const urlAddDept = 'http://localhost:4000/departments/AddDepartmet';
+        const AddDepartment = async () => {
+
+            const data = {
+                "name": document.getElementById("txtDepartment").value,
+                "Manager": 'null',
+            }
+
+            const response = await fetch(urlAddDept, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-access-token': accessToken },
+                body: JSON.stringify(data)
+            })
+            const respData = await response.json()
+
+            //Check if token is valid
+            if (!respData.access) {
+                //The token is not valid!
+                location.href = './Login.html';
+                return
+            }
+
+            location.href = './Department.html';
+
+        }
+
+        const disconnect = () => {
+            sessionStorage.clear()
+            location.href = './Login.html';
+        }
+    </script>
+</body>
+
+</html>

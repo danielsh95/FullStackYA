@@ -1,0 +1,152 @@
+<html>
+
+<head>
+    <button onclick="disconnect()">התנתק</button>
+    Hello, <label id="lbl_username"></label>
+    <h1>Welcome to Departments page</h1>
+    <script>
+        const name = sessionStorage['name'];
+        document.getElementById('lbl_username').innerText = name
+        const disconnect = () => {
+            sessionStorage.clear()
+            location.href = './Login.html';
+        }        
+    </script>
+</head>
+
+<body onload="getDetailsOfDepartment()">
+    <input type="button" onclick="AddDepartment()" value="Add Department" /><br /><br />
+    <table id="depTable" border="5" />
+    <table id="emploeeTable" border="5" /> <br /><br />
+
+    <script>
+        const accessToken = sessionStorage['accessToken'];
+        const url_department = 'http://localhost:4000/departments/getAllDepWithTheirEmployees';
+
+        const getDetailsOfDepartment = async () => {
+            const response = await fetch(url_department, {
+                method: 'GET',
+                headers: { 'x-access-token': accessToken }
+            })
+            const data = await response.json()
+            //Check if token is valid
+            if (!data.access) {
+                //The token is not valid!
+                location.href = './Login.html';
+                return
+            }
+
+
+            const allDept = data.response.departments;
+            ShowsDeptInTable(allDept)
+        }
+
+        const ShowsDeptInTable = (allDepartmentDetails) => {
+            const ourTable = document.getElementById('depTable');
+            ourTable.innerHTML = ''
+            //create titles for the table
+            var trObj_titles = document.createElement("tr");
+            var deptName_th = document.createElement("th")
+            var deptManagerName_th = document.createElement("th")
+            var employees_th = document.createElement("th")
+
+            deptName_th.innerText = "deptName"
+            deptManagerName_th.innerText = "ManagerName"
+            employees_th.innerText = "employees"
+
+            trObj_titles.appendChild(deptName_th)
+            trObj_titles.appendChild(deptManagerName_th)
+            trObj_titles.appendChild(employees_th)
+
+            ourTable.appendChild(trObj_titles)
+            allDepartmentDetails.forEach(dep => {
+
+                //Create 3 tds - columns
+                var tdObj1 = document.createElement("td");
+                var tdObj2 = document.createElement("td");
+                var tdObj3 = document.createElement("td");
+
+                //Add texts to the td's
+                tdObj1.innerText = `${dep.department.name}`;
+                tdObj1.addEventListener("click", function () {
+                    // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
+                    window.open("EditDepartment.html?departmentName=" + encodeURIComponent(dep.department.name), "_self");
+                });
+                var managerName = 'null'
+                if (dep.departmentMamager)
+                    managerName = dep.departmentMamager.firstName + ' ' + dep.departmentMamager.lastName;
+
+                tdObj2.innerText = `${managerName}`;
+
+                // tdObj2.innerText = emploee.department;
+                // tdObj2.addEventListener("click", function () {
+                //     // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
+                //     window.open("EditEmployee.html?employeeId=" + encodeURIComponent(emploee.employeeId), "_blank");
+                // });
+
+                var btn = document.createElement('input');
+                btn.type = "button";
+                btn.value = "Show";
+                btn.addEventListener('click', function () { ShowsEmployeesInOuterTable(dep.employees) });
+                // btn.addEventListener('click', function () { getEmployeesByDepId(emploee.employeeId) });
+                tdObj3.appendChild(btn)
+
+                //Crete row
+                var trObj = document.createElement("tr");
+
+                //Add the tds(columns) to the row
+                trObj.appendChild(tdObj1);
+                trObj.appendChild(tdObj2);
+                trObj.appendChild(tdObj3);
+
+
+                //enter a row to table:
+                ourTable.appendChild(trObj);
+            });
+        }
+
+        const ShowsEmployeesInOuterTable = (employees) => {
+            const ourTable = document.getElementById('emploeeTable');
+            ourTable.innerHTML = ''
+            //create titles for the table
+            var trObj_titles = document.createElement("tr");
+            var deptFullName_th = document.createElement("th")
+
+            deptFullName_th.innerText = "FullName"
+
+            trObj_titles.appendChild(deptFullName_th)
+
+            ourTable.appendChild(trObj_titles)
+
+            employees.forEach(employee => {
+
+                //Create 3 tds - columns
+                var tdObj1 = document.createElement("td");
+
+
+                //Add texts to the td's
+                tdObj1.innerText = `${employee.firstName + ' ' + employee.lastName}`;
+                tdObj1.addEventListener("click", function () {
+                    // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
+                    window.open("EditEmployee.html?employeeId=" + encodeURIComponent(employee._id.toString()), "_self");
+                });
+
+                //Crete row
+                var trObj = document.createElement("tr");
+
+                //Add the tds(columns) to the row
+                trObj.appendChild(tdObj1);
+
+                //enter a row to table:
+                ourTable.appendChild(trObj);
+            });
+        }
+
+        const AddDepartment = () => {
+            location.href = './AddDepartment.html';
+        }
+
+    </script>
+</body>
+
+</html>

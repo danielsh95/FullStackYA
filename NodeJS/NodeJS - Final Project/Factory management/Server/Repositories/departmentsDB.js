@@ -27,4 +27,9 @@ const deleteDepartment = (departmentId) => {
     return DepartmentsModel.findByIdAndDelete(departmentId);
 }
 
-module.exports = { getAllDepartments, getDepartment, getDepartmentByName, updateDepartment, deleteDepartment }
+const addDepartment = (objDept) => {
+    const newDept = new DepartmentsModel(objDept);
+    return newDept.save()
+}
+
+module.exports = { getAllDepartments, getDepartment, getDepartmentByName, updateDepartment, deleteDepartment, addDepartment }
