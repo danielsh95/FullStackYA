@@ -8,4 +8,13 @@ const getAllShifts = () => {
     return shiftsModel.find();
 }
 
-module.exports = { getShiftsById, getAllShifts }
+const addNewShift = (shift) => {
+    const newShift = new shiftsModel(shift);
+    return newShift.save();
+}
+
+const updateShift = (shiftId, obj) => {
+    return shiftsModel.findByIdAndUpdate(shiftId, obj)
+}
+
+module.exports = { getShiftsById, getAllShifts, addNewShift, updateShift }
