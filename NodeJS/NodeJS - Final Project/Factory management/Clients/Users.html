@@ -1,0 +1,74 @@
+<html>
+
+<head>
+    <button onclick="disconnect()">התנתק</button>
+    Hello, <label id="lbl_username"></label>
+    <h1>Welcome to Users page</h1>
+    <script>
+        const name = sessionStorage['name'];
+        document.getElementById('lbl_username').innerText = name
+        const disconnect = () => {
+            sessionStorage.clear()
+            location.href = './Login.html';
+        }        
+    </script>
+</head>
+
+<body onload="getDataUsers()">
+    <table id="tableUsers" border="5">
+        <thead style="font-weight:bold">
+            <tr>
+                <td>userName </td>
+                <td>max actions </td>
+                <td>current actions Allowed </td>
+            </tr>
+        </thead>
+    </table>
+
+    <script>
+        const urlUsers = 'http://localhost:4000/users';
+        const accessToken = sessionStorage['accessToken'];
+
+        const getDataUsers = async () => {
+            const response = await fetch(`${urlUsers}/GetDataUsers`, {
+                method: 'GET',
+                headers: { 'x-access-token': accessToken }
+            })
+
+            const respData = await response.json()
+            console.log(respData);
+
+            showUsersInTable(respData.response.users)
+        }
+
+        const showUsersInTable = (users) => {
+            users.forEach(user => {
+
+                //Create 3 tds - columns
+                var tdObj1 = document.createElement("td");
+                var tdObj2 = document.createElement("td");
+                var tdObj3 = document.createElement("td");
+
+                //Add texts to the td's
+                tdObj1.innerText = user.fullName
+                tdObj2.innerText = user.maxActions;
+                tdObj3.innerText = user.currentActionAllowed;
+
+                //Crete row
+                var trObj = document.createElement("tr");
+
+                //Add the tds(columns) to the row
+                trObj.appendChild(tdObj1);
+                trObj.appendChild(tdObj2);
+                trObj.appendChild(tdObj3);
+
+
+                //enter a row to table:
+                tableUsers.appendChild(trObj);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

@@ -10,4 +10,12 @@ router.post('/login', async (req, res) => {
     res.send(response)
 })
 
+router.get('/GetDataUsers', async (req, res) => {
+    const token = req.headers['x-access-token']
+    const response = await userService.GetDataUsers(token)
+    res.send(response)
+})
+
+
+
 module.exports = router;

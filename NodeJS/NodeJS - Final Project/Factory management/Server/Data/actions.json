@@ -1,0 +1,34 @@
+{
+    "actions": [
+        {
+            "id": 2,
+            "maxActions": 5,
+            "date": "30/4/2024",
+            "actionAllowd": 3
+        },
+        {
+            "id": 3,
+            "maxActions": 15,
+            "date": "30/4/2024",
+            "actionAllowd": 6
+        },
+        {
+            "id": 3,
+            "maxActions": 15,
+            "date": "30/4/2024",
+            "actionAllowd": 5
+        },
+        {
+            "id": 2,
+            "maxActions": 5,
+            "date": "30/4/2024",
+            "actionAllowd": 2
+        },
+        {
+            "id": 2,
+            "maxActions": 5,
+            "date": "30/4/2024",
+            "actionAllowd": 1
+        }
+    ]
+}

@@ -1,8 +1,23 @@
 const usersWS = require('../Repositories/usersWS')
 const usersDB = require('../Repositories/usersDB')
+const usersFile = require('../Repositories/usersFile')
 const jwt = require('jsonwebtoken')
 
 const SECRET_KEY = process.env.SECRET_KEY;
+
+const CheckTokenVerify = (token) => {
+    return jwt.verify(token, SECRET_KEY, (err, data) => {
+        if (err) {
+            console.log('Error, getting a fake token');
+            return false
+        }
+
+        //Here the token is verify!
+        console.log('Successfully verified the token!');
+        return true
+    })
+}
+
 
 //Create a token for a client
 const getTokenForLogin = async (userName, email) => {
@@ -44,4 +59,40 @@ const getTokenForLogin = async (userName, email) => {
     }
 }
 
-module.exports = { getTokenForLogin }
+const getActionsAllowdByUserId = (userId, allUsersActions) => {
+    usersById = allUsersActions.actions.filter(user => user.id == userId)
+    if (usersById.length > 0)
+        return usersById[usersById.length - 1].actionAllowd
+}
+
+const GetDataUsers = async (token) => {
+    if (CheckTokenVerify(token)) {
+        const AllUsersActions = await usersDB.getAllUsers()
+        const AllUsersActionsAllowd = await usersFile.getActions()
+
+        return {
+            'access': true,
+            "response": {
+                'users':
+                    AllUsersActions.map(user => {
+                        actionsAllowd = getActionsAllowdByUserId(user.UserId, AllUsersActionsAllowd)
+                        return {
+                            'fullName': user.FullName,
+                            'maxActions': user.NumOfActions,
+                            'currentActionAllowed': actionsAllowd ? actionsAllowd : user.NumOfActions
+                        }
+                    })
+
+
+                //{ 'fullName': 'john', 'maxActions': 20, 'currentActionAllowed': 10 }]
+            }
+        }
+    }
+    return {
+        'access': false,
+        "response": 'Error, inValid token!'
+    }
+}
+
+
+module.exports = { getTokenForLogin, GetDataUsers }
