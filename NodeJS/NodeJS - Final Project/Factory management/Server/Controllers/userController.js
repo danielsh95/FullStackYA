@@ -16,6 +16,11 @@ router.get('/GetDataUsers', async (req, res) => {
     res.send(response)
 })
 
+router.get('/CheckAction', async (req, res) => {
+    const userId = req.headers['user-id']
+    const response = await userService.CheckAction(userId)
+    res.send(response)
+})
 
 
 module.exports = router;

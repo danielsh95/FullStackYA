@@ -4,8 +4,10 @@ const employeesService = require('../Services/employeesService')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
+
     const token = req.headers['x-access-token']
-    const data = await employeesService.getAllEmployees(token)
+    const userId = req.headers['userid']
+    const data = await employeesService.getAllEmployees(token, userId)
     res.send(data)
 })
 

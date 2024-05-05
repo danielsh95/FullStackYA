@@ -1,13 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-
-</head>
-
-<body onload="getEmploees()">
     <button onclick="disconnect()">התנתק</button>
     Hello, <label id="lbl_username"></label>
+    <script>
+
+    </script>
+</head>
+
+<body onload="CheckActionUser()">
+
     <h1>Welcome to Employees page</h1>
 
     <input type="button" value="Add employee" onclick="location.href='./AddEmployee.html';" />
@@ -19,22 +21,43 @@
 
     Filter by department: <select onchange="filterByDept()" id="selectDep" />
 
-
-
-
-
 </body>
 <script>
     const accessToken = sessionStorage['accessToken'];
-    const name = sessionStorage['name'];
-    document.getElementById('lbl_username').innerText = name
-    const url = 'http://localhost:4000/employees';
-    var _allEmployees = undefined
+    const urlEmployees = 'http://localhost:4000/employees';
+    const urlUsers = 'http://localhost:4000/users/CheckAction';
+    const url_shifts = 'http://localhost:4000/shifts/registered';
 
-    async function getEmploees() {
-        const response = await fetch(url, {
+    var _allEmployees = undefined
+    const name = sessionStorage['name'];
+    const userId = sessionStorage['userId'];
+
+    document.getElementById('lbl_username').innerText = name
+
+
+    const CheckActionUser = async () => {
+        const response = await fetch(urlUsers, {
             method: 'GET',
-            headers: { 'x-access-token': accessToken }
+            headers: { 'user-id': userId }
+        })
+        const respData = await response.json()
+        console.log(respData.response);
+        if (!respData.response) {
+            disconnect()
+        }
+
+        await getEmployees();
+    }
+
+    const disconnect = () => {
+        sessionStorage.clear()
+        location.href = './Login.html';
+    }
+
+    async function getEmployees() {
+        const response = await fetch(urlEmployees, {
+            method: 'GET',
+            headers: { 'x-access-token': accessToken, 'userid': userId }
         })
         const data = await response.json()
         //Check if token is valid
@@ -60,7 +83,6 @@
     }
 
     const getShiftsByEmployeeId = async (employeeId) => {
-        const url_shifts = 'http://localhost:4000/shifts/registered';
 
         const response = await fetch(url_shifts, {
             method: 'POST',
@@ -197,10 +219,7 @@
 
     }
 
-    const disconnect = () => {
-        sessionStorage.clear()
-        location.href = './Login.html';
-    }
+
 
 </script>
 

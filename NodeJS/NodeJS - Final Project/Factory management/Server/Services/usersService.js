@@ -94,5 +94,26 @@ const GetDataUsers = async (token) => {
     }
 }
 
+const CheckAction = async (userId) => {
+    const usersActions = await usersFile.getActions()
+    const listOfTheSameUser = usersActions.actions.filter(user => user.id == userId)
 
-module.exports = { getTokenForLogin, GetDataUsers }
+    //if don't exist any id like userId in a json
+    if (listOfTheSameUser.length == 0)
+        return { 'response': true }
+
+    //here exist the same Id:
+
+    const detailsUser = listOfTheSameUser[listOfTheSameUser.length - 1]
+    if (detailsUser.actionAllowd > 0)
+        return { 'response': true }
+
+    const today = new Date().toLocaleDateString('he-IL').replace(/\./g, '/');
+    if (detailsUser.date != today)
+        return { 'response': true }
+
+    return { 'response': false }
+}
+
+
+module.exports = { getTokenForLogin, GetDataUsers, CheckAction }

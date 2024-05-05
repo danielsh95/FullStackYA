@@ -6,4 +6,8 @@ const getActions = () => {
     return jf.readFile(PATH);
 }
 
-module.exports = { getActions }
+const addAction = (jsonActions) => {
+    jf.writeFile(PATH, jsonActions)
+}
+
+module.exports = { getActions, addAction }
