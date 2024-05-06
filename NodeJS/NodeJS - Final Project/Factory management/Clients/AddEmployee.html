@@ -34,16 +34,11 @@
             headers: { 'x-access-token': accessToken }
         })
         const data = await response.json()
-        //Check if token is valid
-        if (!data.access) {
-        }
-
-        //The token valid:
 
         const allDepartments = data.response;
 
         var selectElement = document.getElementById("selectDepartment");
-        // עדכן את הרשימה באמצעות לולאה
+
         for (var i = 0; i < allDepartments.length; i++) {
             var option = document.createElement("option");
             option.text = allDepartments[i].name;

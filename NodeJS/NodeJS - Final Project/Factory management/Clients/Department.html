@@ -14,19 +14,37 @@
     </script>
 </head>
 
-<body onload="getDetailsOfDepartment()">
+<body onload="CheckActionUser()">
     <input type="button" onclick="AddDepartment()" value="Add Department" /><br /><br />
     <table id="depTable" border="5" />
     <table id="emploeeTable" border="5" /> <br /><br />
 
     <script>
         const accessToken = sessionStorage['accessToken'];
+        const userId = sessionStorage['userId'];
+
         const url_department = 'http://localhost:4000/departments/getAllDepWithTheirEmployees';
+        const urlUsers = 'http://localhost:4000/users/CheckAction';
+
+
+        const CheckActionUser = async () => {
+            const response = await fetch(urlUsers, {
+                method: 'GET',
+                headers: { 'user-id': userId }
+            })
+            const respData = await response.json()
+            console.log(respData.response);
+            if (!respData.response) {
+                disconnect()
+            }
+
+            await getDetailsOfDepartment();
+        }
 
         const getDetailsOfDepartment = async () => {
             const response = await fetch(url_department, {
                 method: 'GET',
-                headers: { 'x-access-token': accessToken }
+                headers: { 'x-access-token': accessToken, 'userid': userId }
             })
             const data = await response.json()
             //Check if token is valid
@@ -69,7 +87,6 @@
                 //Add texts to the td's
                 tdObj1.innerText = `${dep.department.name}`;
                 tdObj1.addEventListener("click", function () {
-                    // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
                     window.open("EditDepartment.html?departmentName=" + encodeURIComponent(dep.department.name), "_self");
                 });
                 var managerName = 'null'
@@ -78,17 +95,11 @@
 
                 tdObj2.innerText = `${managerName}`;
 
-                // tdObj2.innerText = emploee.department;
-                // tdObj2.addEventListener("click", function () {
-                //     // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
-                //     window.open("EditEmployee.html?employeeId=" + encodeURIComponent(emploee.employeeId), "_blank");
-                // });
 
                 var btn = document.createElement('input');
                 btn.type = "button";
                 btn.value = "Show";
                 btn.addEventListener('click', function () { ShowsEmployeesInOuterTable(dep.employees) });
-                // btn.addEventListener('click', function () { getEmployeesByDepId(emploee.employeeId) });
                 tdObj3.appendChild(btn)
 
                 //Crete row
@@ -123,11 +134,9 @@
                 //Create 3 tds - columns
                 var tdObj1 = document.createElement("td");
 
-
                 //Add texts to the td's
                 tdObj1.innerText = `${employee.firstName + ' ' + employee.lastName}`;
                 tdObj1.addEventListener("click", function () {
-                    // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
                     window.open("EditEmployee.html?employeeId=" + encodeURIComponent(employee._id.toString()), "_self");
                 });
 

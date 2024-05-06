@@ -1,5 +1,6 @@
 const express = require('express')
 const departmentsService = require('../Services/departmentsService')
+const usersService = require('../Services/usersService')
 
 const router = express.Router()
 
@@ -11,6 +12,8 @@ router.get('/getAll', async (req, res) => {
 
 router.get('/getAllDepWithTheirEmployees', async (req, res) => {
     const token = req.headers['x-access-token']
+    const userId = req.headers['userid']
+    await usersService.addAction(userId)
     const response = await departmentsService.getAllDepWithTheirEmployees(token);
     res.send(response);
 })
@@ -18,6 +21,8 @@ router.get('/getAllDepWithTheirEmployees', async (req, res) => {
 router.get('/detailsDepartment/:name', async (req, res) => {
     const token = req.headers['x-access-token']
     const departmentName = req.params.name
+    const userId = req.headers['userid']
+    await usersService.addAction(userId)
     const response = await departmentsService.getDetailsEditDepartments(token, departmentName);
     res.send(response);
 })

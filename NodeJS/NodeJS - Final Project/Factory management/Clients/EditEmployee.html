@@ -7,7 +7,7 @@
     <h1>Welcome to EditEmployees page</h1>
 </head>
 
-<body onload="getEmployeeDetails()">
+<body onload="CheckActionUser()">
     <label>First name: </label><br />
     <input type="text" value="dd" id="txtFirstName" /><br /><br />
     <label>Last name: </label><br />
@@ -29,16 +29,32 @@
 <script>
     const name = sessionStorage['name'];
     document.getElementById('lbl_username').innerText = name
+    const userId = sessionStorage['userId'];
 
     const accessToken = sessionStorage['accessToken'];
     const url = new URL(window.location.href);
     const employeeId = url.searchParams.get('employeeId');
     const apiUrl = `http://localhost:4000/employees/employeeId/${employeeId}`;
+    const urlUsers = 'http://localhost:4000/users/CheckAction';
+
+    const CheckActionUser = async () => {
+        const response = await fetch(urlUsers, {
+            method: 'GET',
+            headers: { 'user-id': userId }
+        })
+        const respData = await response.json()
+        console.log(respData.response);
+        if (!respData.response) {
+            disconnect()
+        }
+
+        await getEmployeeDetails();
+    }
 
     const getEmployeeDetails = async () => {
         const response = await fetch(apiUrl, {
             method: 'GET',
-            headers: { 'x-access-token': accessToken }
+            headers: { 'x-access-token': accessToken, 'userid': userId }
         })
         const data = await response.json()
 
@@ -82,7 +98,7 @@
         }
 
         const response = await fetch(update_url, {
-            method: 'POST',
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(UpdateData)
         })
@@ -96,7 +112,7 @@
         const delete_url = 'http://localhost:4000/employees/deleteEmployee'
 
         const response = await fetch(delete_url, {
-            method: 'POST',
+            method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ employeeId })
         })

@@ -18,7 +18,6 @@ const CheckTokenVerify = (token) => {
     })
 }
 
-
 //Create a token for a client
 const getTokenForLogin = async (userName, email) => {
     var user = undefined;
@@ -61,8 +60,13 @@ const getTokenForLogin = async (userName, email) => {
 
 const getActionsAllowdByUserId = (userId, allUsersActions) => {
     usersById = allUsersActions.actions.filter(user => user.id == userId)
-    if (usersById.length > 0)
-        return usersById[usersById.length - 1].actionAllowd
+    if (usersById.length > 0) {
+        const lastAction = usersById[usersById.length - 1]
+        const today = new Date().toLocaleDateString('he-IL').replace(/\./g, '/');
+        if (lastAction.date == today) {
+            return lastAction.actionAllowd
+        }
+    }
 }
 
 const GetDataUsers = async (token) => {
@@ -79,7 +83,7 @@ const GetDataUsers = async (token) => {
                         return {
                             'fullName': user.FullName,
                             'maxActions': user.NumOfActions,
-                            'currentActionAllowed': actionsAllowd ? actionsAllowd : user.NumOfActions
+                            'currentActionAllowed': actionsAllowd != undefined ? actionsAllowd : user.NumOfActions
                         }
                     })
 
@@ -115,5 +119,40 @@ const CheckAction = async (userId) => {
     return { 'response': false }
 }
 
+const addAction = async (userId) => {
+    const jsonActions = await usersFile.getActions()
 
-module.exports = { getTokenForLogin, GetDataUsers, CheckAction }
+    const usersWithTheSameId = jsonActions.actions.filter(action => action.id == userId)
+    const today = new Date().toLocaleDateString('he-IL').replace(/\./g, '/');
+    console.log('I am here!1 - ' + usersWithTheSameId.length);
+    if (usersWithTheSameId.length > 0) {
+        const lastUserAction = usersWithTheSameId[usersWithTheSameId.length - 1]
+        if (lastUserAction.date == today) {
+
+            const newAction = {
+                "id": +userId,
+                "maxActions": lastUserAction.maxActions,
+                "date": lastUserAction.date,
+                "actionAllowd": lastUserAction.actionAllowd - 1
+            }
+            usersFile.addAction({ 'actions': [...jsonActions.actions, newAction] })
+
+            return
+        }
+
+    }
+
+    //not exist action with the same userId OR the date is not today: 
+    const user = await usersDB.getUserByUserId(userId)
+    console.log('I am here!2');
+    const newAction = {
+        "id": +userId,
+        "maxActions": user.NumOfActions,
+        "date": today,
+        "actionAllowd": user.NumOfActions - 1
+    }
+
+    usersFile.addAction({ 'actions': [...jsonActions.actions, newAction] })
+}
+
+module.exports = { getTokenForLogin, GetDataUsers, CheckAction, addAction }

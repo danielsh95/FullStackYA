@@ -72,7 +72,8 @@
 
 
         const selectDep = document.getElementById("selectDep")
-        // עדכן את הרשימה באמצעות לולאה
+
+
         for (var i = 0; i < data.response.departments.length; i++) {
             var option = document.createElement("option");
             option.text = data.response.departments[i];
@@ -179,13 +180,11 @@
             //Add texts to the td's
             tdObj1.innerText = `${emploee.fullName}`;
             tdObj1.addEventListener("click", function () {
-                // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
                 window.open("EditEmployee.html?employeeId=" + encodeURIComponent(emploee.employeeId), "_self");
             });
 
             tdObj2.innerText = emploee.department;
             tdObj2.addEventListener("click", function () {
-                // פתיחת חלון חדש עם הכתובת של Google והשם המלא של העובד כחלק מה-URL
                 window.open("EditDepartment.html?departmentName=" + encodeURIComponent(emploee.department), "_self");
             });
 

@@ -2,9 +2,6 @@ const jwt = require('jsonwebtoken');
 const employeesDB = require('../Repositories/employeesDB')
 const departmentsDB = require('../Repositories/departmentsDB')
 const employeeShiftsDB = require('../Repositories/employeeShiftsDB')
-const usersFile = require('../Repositories/usersFile')
-const usersDB = require('../Repositories/usersDB')
-
 
 
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -22,57 +19,10 @@ const CheckTokenVerify = (token) => {
     })
 }
 
-const addAction = async (userId) => {
-    const jsonActions = await usersFile.getActions()
-
-    const usersWithTheSameId = jsonActions.actions.filter(action => action.id == userId)
-    const today = new Date().toLocaleDateString('he-IL').replace(/\./g, '/');
-    console.log('I am here!1 - ' + usersWithTheSameId.length);
-    if (usersWithTheSameId.length > 0) {
-        const lastUserAction = usersWithTheSameId[usersWithTheSameId.length - 1]
-        if (lastUserAction.date == today) {
-
-            const newAction = {
-                "id": +userId,
-                "maxActions": lastUserAction.maxActions,
-                "date": lastUserAction.date,
-                "actionAllowd": lastUserAction.actionAllowd - 1
-            }
-            usersFile.addAction({ 'actions': [...jsonActions.actions, newAction] })
-
-            return
-        }
-
-    }
-
-    //not exist action with the same userId OR the date is not today: 
-    const user = await usersDB.getUserByUserId(userId)
-    console.log('I am here!2');
-    const newAction = {
-        "id": +userId,
-        "maxActions": user.NumOfActions,
-        "date": today,
-        "actionAllowd": user.NumOfActions - 1
-    }
-
-    usersFile.addAction({ 'actions': [...jsonActions.actions, newAction] })
-}
-
-
 const getAllEmployees = async (token, userId) => {
     if (CheckTokenVerify(token)) {
-
-        await addAction(userId)
-
-
-
-
         const allEmployees = await employeesDB.getAllEmployees();
-
-
-
         const allDepartments = await departmentsDB.getAllDepartments();
-
 
         return {
             "access": true,

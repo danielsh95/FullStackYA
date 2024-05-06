@@ -22,5 +22,4 @@ router.get('/CheckAction', async (req, res) => {
     res.send(response)
 })
 
-
 module.exports = router;

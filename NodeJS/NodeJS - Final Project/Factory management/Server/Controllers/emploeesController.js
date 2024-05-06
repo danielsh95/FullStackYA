@@ -1,5 +1,6 @@
 const express = require('express')
 const employeesService = require('../Services/employeesService')
+const usersService = require('../Services/usersService')
 
 const router = express.Router()
 
@@ -7,6 +8,7 @@ router.get('/', async (req, res) => {
 
     const token = req.headers['x-access-token']
     const userId = req.headers['userid']
+    await usersService.addAction(userId)
     const data = await employeesService.getAllEmployees(token, userId)
     res.send(data)
 })
@@ -15,17 +17,19 @@ router.get('/', async (req, res) => {
 router.get('/employeeId/:id', async (req, res) => {
     const employeeId = req.params.id;
     const token = req.headers['x-access-token']
+    const userId = req.headers['userid']
+    await usersService.addAction(userId)
     const detailsEmployee = await employeesService.getAllDetailsEmployee(token, employeeId);
     res.send(detailsEmployee);
 })
 
-router.post('/updateEmployee', async (req, res) => {
+router.put('/updateEmployee', async (req, res) => {
     const Employee = req.body;
     const response = await employeesService.updateEmployee(Employee)
     res.send(response)
 })
 
-router.post('/deleteEmployee', async (req, res) => {
+router.delete('/deleteEmployee', async (req, res) => {
     const employeeId = req.body.employeeId;
     const response = await employeesService.deleteEmployee(employeeId)
     res.send(response)
