@@ -16,12 +16,12 @@ function MoviesComp() {
   }, [])
 
   return (
-    <div style={{border: '5px solid red', width: '400px', textAlign: 'center'}}>
+    <div style={{ border: '5px solid red', width: '400px', textAlign: 'center' }}>
       <h1>Movies</h1>
       {
         moviesIds.map((movieId, index) => {
           return <div key={index}>
-            <MovieComp movieId={movieId} /><br/>
+            <MovieComp movieId={movieId} /><br />
           </div>
         })
       }

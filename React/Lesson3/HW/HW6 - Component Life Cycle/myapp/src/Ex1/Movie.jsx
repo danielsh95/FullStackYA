@@ -16,6 +16,7 @@ function MovieComp({ movieId }) {
     fetchEffect()
 
   }, [])
+  
   return (
     <div style={{ border: '5px solid blue', width: '300px' }}>
       <h2>{movie.name}</h2>
