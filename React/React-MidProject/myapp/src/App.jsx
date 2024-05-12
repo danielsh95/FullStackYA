@@ -1,11 +1,12 @@
-import HomeComp from "./Home/Home";
+import UsersComp from "./Home/Users/Users"
+
 
 
 function App() {
 
   return (
     <>
-      <HomeComp />
+      <UsersComp />
     </>
   )
 }

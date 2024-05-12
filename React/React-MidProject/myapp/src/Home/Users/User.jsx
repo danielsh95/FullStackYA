@@ -8,6 +8,8 @@ function UserComp({ borderColor, user, callback }) {
 
   const [isShowAddrees, setIsShowAddrees] = useState(false)
   const [userLocal, setUserLocal] = useState({})
+  const [userColor, setUserColor] = useState('white')
+
 
   useEffect(() => {
     const fetchData = () => {
@@ -27,11 +29,11 @@ function UserComp({ borderColor, user, callback }) {
   }
 
   return (
-    <div style={{ border: `5px solid ${borderColor}` }}>
+    <div style={{ border: `5px solid ${borderColor}`, background:userColor}}>
 
       {<div style={{ margin: '5px' }}>
 
-        Id: <label onClick={() => { }}>{userLocal.id || ''} </label>  <br />
+        Id: <label onClick={() => { callback.setIdForShowTodosPost(userLocal.id); setUserColor('orange') }}>{userLocal.id || ''} </label>  <br />
         Name: <input type="text" value={userLocal.name || ''} onChange={e => setUserLocal({ ...userLocal, name: e.target.value })} /><br />
         Email: <input type="text" value={userLocal.email || ''} onChange={e => setUserLocal({ ...userLocal, email: e.target.value })} /><br />
         <input type="button" value={'Other Date'} onMouseOver={() => setIsShowAddrees(false)} onClick={() => setIsShowAddrees(true)} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

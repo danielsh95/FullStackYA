@@ -2,7 +2,7 @@ import axios from 'axios'
 
 
 const getData = async (url) => {
-    const { data } = await axios.get(url + '?_limit=3')
+    const { data } = await axios.get(url)
     return data
 }
 
