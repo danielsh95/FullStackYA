@@ -13,16 +13,16 @@ function UserComp() {
   useEffect(() => {
 
     setUser({ ...user, id: id, email: email, city: city, name: name })
-    
+
 
   }, [])
 
   return (
     <div style={{ border: '5px solid blue' }}>
-      Id: {user.id} <br/>
-      name: {user.name}<br/>
-      email: {user.email}<br/>
-      city: {user.city}<br/>
+      Id: {user.id} <br />
+      name: {user.name}<br />
+      email: {user.email}<br />
+      city: {user.city}<br />
 
     </div>
   )

@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <h2>Welcome to Users</h2>
-      <Link to={'/Users'}>All Users</Link><br/><br/>
+      <Link to={'/Users'}>All Users</Link><br /><br />
       <Routes>
         <Route path='/' element={<UsersComp />} />
         <Route path="/Users" element={<UsersComp />} />

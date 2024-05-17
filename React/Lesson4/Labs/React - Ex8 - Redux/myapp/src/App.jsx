@@ -1,8 +1,15 @@
+import AddUserComp from "./Users/AddUser"
+import UsersViewComp from "./Users/UsersView"
+
 function App() {
 
   return (
     <>
-      feeef
+      AllUsers:
+      <UsersViewComp />
+
+      AddUsers:
+      <AddUserComp />
     </>
   )
 }
