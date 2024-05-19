@@ -29,6 +29,7 @@ function App() {
 
   useEffect(() => {
     LoadData('users')
+    LoadData('categories')
   }, [])
 
 

@@ -16,10 +16,13 @@ export default function Login() {
     const CheckLogin = () => {
         const user = users.find(user => user.userName === userName && user.password === password)
         if (user) {
-            if (user.type === 'Manager')
-                navigate('/admin')
-            else
-                alert('succsefull login!')
+            {
+                sessionStorage['firstNameUser'] = user.firstName;
+                if (user.type === 'Manager')
+                    navigate('/admin')
+                else
+                    alert('succsefull login!')
+            }
         }
         else {
             alert('the userName or password does not exist!')
