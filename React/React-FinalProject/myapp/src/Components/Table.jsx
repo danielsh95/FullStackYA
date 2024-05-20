@@ -3,7 +3,7 @@ import React from 'react'
 const CustomTableComp = ({ titles, dataRows, customStyle }) => {
     return (
         <div>
-            <table rules="all" style={customStyle} >
+            <table rules="all" style={customStyle ? customStyle : { border: 'solid 1px gray' }} >
                 <thead>
 
                     <tr>

@@ -4,8 +4,8 @@ import HeaderMenuComp from "../Components/HeaderMenu"
 import { Box, Button } from "@mui/material";
 import CategoriesComp from "../Components/Categories";
 import CustomersComp from "../Components/Customers";
-import ProductsComp from "../Components/Products";
 import StatisticsComp from "../Components/Statistics";
+import ProductsComp from "../Components/Products";
 
 
 
