@@ -30,6 +30,8 @@ function App() {
   useEffect(() => {
     LoadData('users')
     LoadData('categories')
+    LoadData('products')
+    LoadData('orders')
   }, [])
 
 
@@ -38,9 +40,10 @@ function App() {
       <Routes>
         {/* Dynamic Routing - Params */}
         <Route path='/' element={<Login />} />
+        <Route path='/Login' element={<Login />} />
         <Route path='/Register' element={<Register />} />
         <Route path='/Admin' element={<AdminComp />} />
-        <Route path='/user' element={<UserComp/>} />
+        <Route path='/user' element={<UserComp />} />
       </Routes>
     </>
   )

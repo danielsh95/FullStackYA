@@ -19,7 +19,7 @@ export const Register = () => {
 
     const createNewUser = (e) => {
         e.preventDefault();
-        const obj = { firstName, lastName, userName, password, allowOthersToSeeMyOrders, type: 'user' }
+        const obj = { firstName, lastName, userName, password, allowOthersToSeeMyOrders, type: 'user', date: new Date().toLocaleDateString() }
         addDocToCollection("users", obj)
         navigate('/user')
     }

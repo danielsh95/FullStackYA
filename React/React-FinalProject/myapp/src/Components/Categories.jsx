@@ -22,7 +22,7 @@ const CategoriesComp = () => {
 
     return (
         <div>
-            <label>Categories</label>
+            <b><label style={{ fontSize: '25px' }}>Categories</label></b>
             <Card sx={{ minWidth: 275, margin: '20px', bgcolor: '#ececec' }}>
                 <CardContent>
                     {

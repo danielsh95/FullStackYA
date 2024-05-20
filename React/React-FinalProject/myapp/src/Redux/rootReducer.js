@@ -1,7 +1,8 @@
 const initialState = {
     users: [],
     products: [],
-    categories: []
+    categories: [],
+    orders: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -11,6 +12,10 @@ const reducer = (state = initialState, action) => {
                 return { ...state, users: action.payload.users };
             else if (action.payload.type == 'categories')
                 return { ...state, categories: action.payload.categories };
+            else if (action.payload.type == 'products')
+                return { ...state, products: action.payload.products };
+            else if (action.payload.type == 'orders')
+                return { ...state, orders: action.payload.orders };
             else
                 return { ...state };
 
