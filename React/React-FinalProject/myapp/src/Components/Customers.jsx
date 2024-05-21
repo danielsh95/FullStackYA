@@ -18,8 +18,6 @@ const CustomersComp = () => {
                 const quanity = orderUser.quantity
                 const orderDate = orderUser.date
                 return [productName, quanity, orderDate]
-
-
             })
 
             return [
