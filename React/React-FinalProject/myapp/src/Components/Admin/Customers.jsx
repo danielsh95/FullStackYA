@@ -1,5 +1,5 @@
 import React from 'react'
-import CustomTableComp from './Table'
+import CustomTableComp from '../Table'
 import { useSelector } from 'react-redux'
 
 const CustomersComp = () => {

@@ -2,7 +2,7 @@ import { Box, Button, Card, CardActions, CardContent, TextField } from '@mui/mat
 import React, { useEffect, useState } from 'react'
 import CategoryComp from './Category'
 import { useSelector } from 'react-redux';
-import { addDocToCollection } from '../FireBase/firebaseUtils';
+import { addDocToCollection } from '../../FireBase/firebaseUtils';
 
 const CategoriesComp = () => {
     const categories = useSelector((state) => state.categories);

@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, TextField } from '@mui/material'
 import React, { useState } from 'react'
-import { removeDocFromCollection, editDocInCollection } from '../FireBase/firebaseUtils';
+import { removeDocFromCollection, editDocInCollection } from '../../FireBase/firebaseUtils';
 
 const CategoryComp = ({ category }) => {
 

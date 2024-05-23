@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
 
-    const [userName, setUserName] = useState('daniel123')
-    const [password, setPassword] = useState('123456')
+    const [userName, setUserName] = useState('yosi123')
+    const [password, setPassword] = useState('147963')
     const users = useSelector((state) => state.users);
     const navigate = useNavigate();
 
@@ -18,10 +18,11 @@ export default function Login() {
         if (user) {
             {
                 sessionStorage['firstNameUser'] = user.firstName;
+                sessionStorage['userId'] = user.id;
                 if (user.type === 'Manager')
                     navigate('/admin')
                 else
-                    alert('succsefull login!')
+                    navigate('/user')
             }
         }
         else {

@@ -2,10 +2,10 @@ import { useEffect, useState } from "react"
 import WelcomeBarComp from "../Components/WelcomeBar"
 import HeaderMenuComp from "../Components/HeaderMenu"
 import { Box, Button } from "@mui/material";
-import CategoriesComp from "../Components/Categories";
-import CustomersComp from "../Components/Customers";
-import StatisticsComp from "../Components/Statistics";
-import ProductsComp from "../Components/Products";
+import CategoriesComp from "../Components/Admin/Categories";
+import CustomersComp from "../Components/Admin/Customers";
+import StatisticsComp from "../Components/Admin/Statistics";
+import ProductsComp from "../Components/Admin/Products";
 
 
 

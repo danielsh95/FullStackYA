@@ -17,7 +17,26 @@ const CustomBarChartComp = ({ products, user, ordersUser }) => {
 
     useEffect(() => {
         setSumOfQuantityOrder(ordersUser.map(order => order.quantity).reduce((a, b) => a + Number(b), 0))
+        console.log('ordersUser')
+        console.log(ordersUser)
+        console.log(calculteDuplicateOrder(ordersUser))
     }, [user])
+
+    const calculteDuplicateOrder = (orders) => {
+        var newOrders = []
+        orders.map(order => {
+            if (newOrders.map(ord => ord.productId).includes(order.productId)) {
+                //if already exist:
+                newOrders = newOrders.map(ord => {
+                    return ord.productId != order.productId ? ord : { ...ord, quantity: ord.quantity + order.quantity }
+                })
+            }
+            else {
+                newOrders = [...newOrders, order]
+            }
+        });
+        return newOrders;
+    }
 
     return (
         <div>
@@ -27,17 +46,17 @@ const CustomBarChartComp = ({ products, user, ordersUser }) => {
                     <tbody>
                         <tr>
                             {
-                                products.map(product => {
+                                products.map((product, index) => {
                                     if (ordersUser.map(o => o.productId).includes(product.id)) {
-                                        return ordersUser.map((order) => {
+                                        return calculteDuplicateOrder(ordersUser).map((order) => {
                                             if (order.productId == product.id) {
-                                                return <td key={product.id} style={{ "--size": `calc(${calculatePercentQuantity(order.quantity)} / 100)` }}>
+                                                return <td key={index} style={{ "--size": `calc(${calculatePercentQuantity(order.quantity)} / 100)` }}>
                                                     <span className="data"> {product.name}<br /> {order.quantity} </span></td>
                                             }
                                         })
                                     }
                                     else {
-                                        return <td key={product.id} style={{ "--size": "calc(2 / 100)" }}>
+                                        return <td key={index} style={{ "--size": "calc(0 / 100)" }}>
                                             <span className="data"> {product.name} </span></td>
                                     }
                                 })

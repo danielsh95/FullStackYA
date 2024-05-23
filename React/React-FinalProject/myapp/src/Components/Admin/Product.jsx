@@ -1,8 +1,8 @@
 import { Input } from '@mui/joy'
 import { Box, Button, Card, CardContent, MenuItem, Paper, Select, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import CustomTableComp from './Table'
-import { addDocToCollection, editDocInCollection } from '../FireBase/firebaseUtils'
+import CustomTableComp from '../Table'
+import { addDocToCollection, editDocInCollection } from '../../FireBase/firebaseUtils'
 
 const ProductComp = ({ product, categories, getBoughtProduct = [], isNewProduct, setIsNewProduct }) => {
 
