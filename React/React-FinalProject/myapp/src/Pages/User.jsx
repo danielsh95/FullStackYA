@@ -5,10 +5,11 @@ import { Box } from '@mui/material'
 import MyAccountComp from '../Components/Users/MyAccount.jsx'
 import OrdersComp from '../Components/Users/Orders.jsx'
 import ProductsComp from '../Components/Users/Products.jsx'
+import { useNavigate } from 'react-router-dom'
 
 
 export const UserComp = () => {
-
+    const navigate = useNavigate();
 
     const [firstNameUser, setFirstNameUser] = useState('')
     const [selectedComponent, setSelectedComponent] = useState('Products')
@@ -21,8 +22,10 @@ export const UserComp = () => {
                 return <OrdersComp />
             case "My Account":
                 return <MyAccountComp />
-            case "C":
-                return <div></div>
+                case "Log Out":
+                    sessionStorage.clear();
+                    navigate('/login')
+                    break;
             default:
                 return null;
         }

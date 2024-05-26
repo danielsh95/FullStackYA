@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
 
-    const [userName, setUserName] = useState('yosi123')
-    const [password, setPassword] = useState('147963')
+    const [userName, setUserName] = useState('')
+    const [password, setPassword] = useState('')
     const users = useSelector((state) => state.users);
     const navigate = useNavigate();
 

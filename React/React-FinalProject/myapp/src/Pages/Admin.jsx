@@ -6,12 +6,16 @@ import CategoriesComp from "../Components/Admin/Categories";
 import CustomersComp from "../Components/Admin/Customers";
 import StatisticsComp from "../Components/Admin/Statistics";
 import ProductsComp from "../Components/Admin/Products";
+import { useNavigate } from "react-router-dom";
+
 
 
 
 export const AdminComp = () => {
     const [firstNameUser, setFirstNameUser] = useState('')
     const [selectedComponent, setSelectedComponent] = useState('Categories')
+
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -31,6 +35,10 @@ export const AdminComp = () => {
                 return <CustomersComp />;
             case "Statistics":
                 return <StatisticsComp />;
+            case "Log Out":
+                sessionStorage.clear();
+                navigate('/login')
+                break;
             default:
                 return null;
         }
@@ -43,7 +51,7 @@ export const AdminComp = () => {
                     <div style={{ textAlign: 'center' }}>
                         <WelcomeBarComp name={firstNameUser} /> <br />
 
-                        <HeaderMenuComp titles={['Categories', 'Products', 'Customers', 'Statistics']} setSelectedComponent={setSelectedComponent} /><br /><br />
+                        <HeaderMenuComp titles={['Categories', 'Products', 'Customers', 'Statistics', 'Log Out']} setSelectedComponent={setSelectedComponent} /><br /><br />
 
                         <Box sx={{ height: 5, borderRadius: 1, backgroundColor: '#dedede' }} />
                     </div> <br /><br />
