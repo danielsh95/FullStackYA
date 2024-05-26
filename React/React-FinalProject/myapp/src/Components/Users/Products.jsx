@@ -11,6 +11,7 @@ const ProductsComp = () => {
 
   const categories = useSelector((state) => state.categories)
   const allProducts = useSelector((state) => state.products)
+  const allOrders = useSelector((state) => state.orders)
   const [isShowCart, setIsShowCart] = useState(false)
   const [productsFilter, setProductsFilter] = useState([])
   const [filter, setFilter] = useState({ title: '', limitPrice: 0, selectCategory: 'ALL' })
@@ -19,6 +20,10 @@ const ProductsComp = () => {
   const initData = () => {
     setProductsFilter(allProducts)
     setMakeOrder(allProducts.map(product => { return { productId: product.id, quantity: 0 } }))
+  }
+
+  const clearFilter = () => {
+    setFilter({ title: '', limitPrice: 0, selectCategory: 'ALL' })
   }
 
   useEffect(() => {
@@ -46,7 +51,7 @@ const ProductsComp = () => {
       <Card>
         <CardContent sx={{ 'display': 'flex', alignItems: 'center' }}>
           <label style={{ margin: '5px' }}>Filter By Category:</label>
-          <select style={{ margin: '5px' }} onChange={(e) => setFilter({ ...filter, selectCategory: e.target.value })}>
+          <select value={filter.selectCategory} style={{ margin: '5px' }} onChange={(e) => setFilter({ ...filter, selectCategory: e.target.value })}>
             <option>ALL</option>
             {
               categories.map(category => {
@@ -58,12 +63,12 @@ const ProductsComp = () => {
           <label style={{ margin: '5px' }}>Price:</label>
           <Slider sx={{ margin: '5px' }} aria-label="Volume" value={filter.limitPrice} min={0} max={500}
             onChange={(e) => { setFilter({ ...filter, limitPrice: e.target.value }) }} />
-          <label style={{ margin: '5px' }}>{'154$'}</label>
+          <label style={{ margin: '5px' }}>{filter.limitPrice}$</label>
 
           <label style={{ margin: '5px' }}>Title:</label>
-          <input style={{ borderRadius: '30px', maxWidth: '10vh', textAlign: 'center', margin: '5px' }}
-            onChange={(e) => setFilter({ ...filter, title: e.target.value })} />
-          <button style={{ margin: '5px' }} onClick={() => console.log(makeOrder)}>Clear</button>
+          <input type='text' style={{ borderRadius: '30px', maxWidth: '10vh', textAlign: 'center', margin: '5px' }}
+            onChange={(e) => setFilter({ ...filter, title: e.target.value })} value={filter.title} />
+          <button style={{ margin: '5px' }} onClick={() => clearFilter()}>Clear</button>
         </CardContent>
       </Card>
 
@@ -74,7 +79,8 @@ const ProductsComp = () => {
 
       {
         productsFilter.map(product => {
-          return <ProductComp product={product} key={product.id} makeOrder={makeOrder} setMakeOrder={setMakeOrder} />
+          const TotalBought = allOrders.filter(order => order.productId == product.id).map(order => order.quantity).reduce((a, b) => a + b)
+          return <ProductComp product={product} key={product.id} makeOrder={makeOrder} setMakeOrder={setMakeOrder} TotalBought={TotalBought} />
         })
       }
     </div>

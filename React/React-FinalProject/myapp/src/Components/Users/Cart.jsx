@@ -2,7 +2,7 @@ import { Box, Button, Chip, Drawer } from '@mui/material'
 import React, { useState } from 'react'
 import KeyboardBackspaceOutlinedIcon from '@mui/icons-material/KeyboardBackspaceOutlined';
 import { useSelector } from 'react-redux';
-import { addDocToCollection } from '../../FireBase/firebaseUtils';
+import { addDocToCollection, editDocInCollection } from '../../FireBase/firebaseUtils';
 const CartComp = ({ isShowCart, setIsShowCart, makeOrder, setMakeOrder }) => {
   const products = useSelector((state) => state.products)
 
@@ -19,12 +19,14 @@ const CartComp = ({ isShowCart, setIsShowCart, makeOrder, setMakeOrder }) => {
     makeOrder.forEach(orderItem => {
       if (orderItem.quantity > 0) {
         const obj = {
-          date: "20.5.2024",
+          date: new Date().toLocaleDateString('he-IL'),
           productId: orderItem.productId,
           quantity: orderItem.quantity,
           userId: sessionStorage['userId']
         }
         addDocToCollection('orders', obj)
+        const objToUpdate = products.find(product => product.id == orderItem.productId)
+        editDocInCollection('products', orderItem.productId, { ...objToUpdate, 'inStock': objToUpdate.inStock - orderItem.quantity})
       }
     });
   }
@@ -36,6 +38,16 @@ const CartComp = ({ isShowCart, setIsShowCart, makeOrder, setMakeOrder }) => {
       sum += getProductFromOrder(orderItem).price * orderItem.quantity
     });
     return sum;
+  }
+
+  const increaseQuantity = (ord) => {
+    setMakeOrder(makeOrder.map(order => order.productId != ord.productId ? order :
+      { ...order, quantity: order.quantity + 1 }))
+  }
+
+  const decreaseQuantity = (ord) => {
+    setMakeOrder(makeOrder.map(order => order.productId != ord.productId ? order :
+      { ...order, quantity: order.quantity - 1 }))
   }
 
   return (
@@ -54,9 +66,9 @@ const CartComp = ({ isShowCart, setIsShowCart, makeOrder, setMakeOrder }) => {
                   label={
                     <Box>
                       <label>{getProductFromOrder(order).name} - </label>
-                      <button>+</button>
+                      <button onClick={() => increaseQuantity(order)} >+</button>
                       <label>{order.quantity}</label>
-                      <button>-</button>
+                      <button onClick={() => decreaseQuantity(order)}>-</button>
                       <label>units - Total: </label>
                       <label>{getProductFromOrder(order).price * order.quantity}$ </label>
                     </Box>

@@ -3,11 +3,15 @@ import React, { useEffect, useState } from 'react'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 
-const ProductComp = ({ product, makeOrder, setMakeOrder }) => {
+const ProductComp = ({ product, makeOrder, setMakeOrder, TotalBought }) => {
 
     const increaseQuantity = (e) => {
         setMakeOrder(makeOrder.map(order => order.productId != product.id ? order :
             { ...order, quantity: order.quantity + 1 }))
+    }
+    const decreaseQuantity = (e) => {
+        setMakeOrder(makeOrder.map(order => order.productId != product.id ? order :
+            { ...order, quantity: (order.quantity == 0 ? 0 : order.quantity - 1) }))
     }
 
     const showQuantityOrder = () => {
@@ -24,9 +28,10 @@ const ProductComp = ({ product, makeOrder, setMakeOrder }) => {
                         <label style={{ fontSize: '20px' }}>{product.description}</label> <br />
                         <label style={{ fontSize: '20px' }}>{`${product.price}$`}</label> <br />
                         <label style={{ fontSize: '20px' }}>In stock: {product.inStock}</label> <br />
-                        {/* <Button variant="contained" size="small" style={{ backgroundColor: 'Gray', borderRadius: '30px' }}>+</Button> */}
+                       
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <button style={{ color: 'gray', backgroundColor: '#d9d9d9', borderRadius: '30%' }} >-</button>
+                            <button style={{ color: 'gray', backgroundColor: '#d9d9d9', borderRadius: '30%' }}
+                                onClick={decreaseQuantity}>-</button>
                             <Card sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '30px', width: '40px', height: '30px', margin: '5px', textAlign: 'center' }}>
                                 <label>{showQuantityOrder()} </label></Card>
                             <button style={{ color: 'gray', backgroundColor: '#d9d9d9', borderRadius: '30%' }}
@@ -41,7 +46,7 @@ const ProductComp = ({ product, makeOrder, setMakeOrder }) => {
                     </div>
                     <div style={{ margin: '0px 20px', display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
                         {/* Right Side */}
-                        <label>Bought: {45}</label>
+                        <label>Bought: {TotalBought}</label>
                     </div>
 
                 </div>

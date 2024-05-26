@@ -7,7 +7,7 @@ const OrdersComp = () => {
     const products = useSelector((state) => state.products)
 
     const dataRows = () => {
-        return orders.map(order => {
+        return orders.filter(order => order.userId == sessionStorage['userId']).map(order => {
             const product = products.find(product => product.id == order.productId)
             const total = order.quantity * product.price
             return [

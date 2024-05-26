@@ -22,10 +22,10 @@ export const UserComp = () => {
                 return <OrdersComp />
             case "My Account":
                 return <MyAccountComp />
-                case "Log Out":
-                    sessionStorage.clear();
-                    navigate('/login')
-                    break;
+            case "Log Out":
+                sessionStorage.clear();
+                navigate('/login')
+                break;
             default:
                 return null;
         }
@@ -51,7 +51,7 @@ export const UserComp = () => {
                             <Box sx={{ height: 5, borderRadius: 1, backgroundColor: '#dedede' }} />
                         </div> <br /> <br />
 
-                        <Box sx={{ borderRadius: 1, backgroundColor: '#dedede', display: 'inline-block', minWidth: '600px', width: 'fit-content', height: 'fit-content', padding: '10px' }}>
+                        <Box sx={{ borderRadius: 1, backgroundColor: '#dedede', display: 'inline-block', width: '800px', height: 'fit-content', padding: '10px' }}>
                             {renderComponent()}
                         </Box>
                     </div>
